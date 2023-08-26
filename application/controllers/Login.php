@@ -23,7 +23,8 @@ class Login extends MY_Controller
 		
  	}
 	 
-	function view($arr=NULL){
+	function view($arr=NULL)
+	{
 		
     	$this->index($arr);
 		
@@ -90,9 +91,19 @@ class Login extends MY_Controller
 		}
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	protected function _check(){
 		
-		$result	 =	$this->Member_model->check_login();
+		$result	 =	$this -> Member_model -> check_login();
 	
 		//==================record Found Check==================//
 		if(!isset($result[0])){

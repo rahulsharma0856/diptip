@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Chat extends CI_Controller {
+class Chat extends App {
 
 	function __construct(){
 		
@@ -20,13 +20,7 @@ class Chat extends CI_Controller {
 		
 		$this->load->model('user/Notification_module');
 		
-		if(!is_logged_user()){
-			
-			header('Location: '.file_path());
-			
-			exit;	
-			
-        }
+
 		
 		date_default_timezone_set('Asia/Calcutta'); 	
    		

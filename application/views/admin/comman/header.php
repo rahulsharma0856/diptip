@@ -87,7 +87,7 @@
             <?php } ?>
             <li> <a id="menu-educational-tool" href="<?=file_path()?>user/dashboard/educational_videos"> <i class="demo-psi-address-book"></i> <span class="menu-title"> Educational Videos </span> </a> </li>
             <li> <a id="menu-my-training_centre" href="<?=file_path('user')?>training_centre"> <i class="fa fa-graduation-cap"></i> <span class="menu-title">Training Centre </span> </a> </li>
-            <?php $isPaid_member =  $this->comman_fun->check_record('downline_paid',array('usercode'=>user_session('usercode')));?>
+            <?php $isPaid_member =  true?>
             <?php if($isPaid_member){ ?>
             <li> <a id="menu-wallet-us" href="<?=file_path('user/wallet/view')?>"> <i class="demo-psi-view-list"></i> <span class="menu-title"> USDC & SP WALLET </span> </a> </li>
             <li> <a id="menu-wallet" href="<?=file_path('user/transaction/view')?>"> <i class="demo-psi-credit-card-2"></i> <span class="menu-title"> MY WALLET </span> </a> </li>

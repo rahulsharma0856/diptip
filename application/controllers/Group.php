@@ -6,13 +6,7 @@ class Group extends CI_Controller {
  	{
    		parent::__construct(); 
 		
-		if(!is_logged_user()){
-			
-			header('Location: '.file_path());
-			
-			exit;	
-			
-        }
+
 		
 		$this->load->model('user/Group_model','',TRUE);
 		

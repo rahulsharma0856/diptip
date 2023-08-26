@@ -23,7 +23,14 @@ class MY_Controller extends CI_Controller
      */
     public function isLoggedIn()
     { 
-        return count((array)$this->session->userdata['user']) > 1;
+        $data = $this->session->userdata['smr_web_login'];
+        
+        if (is_array($data)) {
+            if ($data['login'] == 'true') {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

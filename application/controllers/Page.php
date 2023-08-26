@@ -1,18 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Page extends CI_Controller {
+class Page extends App {
 
 	function __construct()
  	{
    		parent::__construct(); 
 		
-		if(!is_logged_user()){
-			
-			header('Location: '.file_path());
-			
-			exit;	
-			
-        }
+
 		
 		$this->load->model('user/Page_model','',TRUE);
 		

@@ -1,18 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Upgrade extends CI_Controller {
+class Upgrade extends App {
 
 	function __construct()
  	{
    		parent::__construct(); 
 		
-		if(!is_logged_user()){
-			
-			header('Location: '.file_path());
-			
-			exit;	
-			
-        }
+
 	
 		$this->load->model('Member_module','',TRUE);
 		

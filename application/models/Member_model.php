@@ -7,19 +7,7 @@ Class Member_model extends CI_Model
 	
 	function is_paid($uid){
 		
-		$this -> db -> select('*');
-		
-		$this -> db -> from('downline_paid');
-		
-		$this -> db -> where('usercode',$uid);
-		
-    	$query = $this -> db -> get();
-		
-    	$the_content = $query->result_array();
-		
-		$val	=	(isset($the_content[0])) ? true : false;
-		
-    	return $val;
+		return true;
 		
 	}
 	
@@ -27,21 +15,7 @@ Class Member_model extends CI_Model
 	
 	function check_paid($uid = NULL){
 	
-		$this -> db -> select('*');
-		
-		$this -> db -> from('downline_paid');
-		
-		$this -> db -> where('usercode',$uid);
-		
-    	$query = $this -> db -> get();
-		
-    	$the_content = $query->result_array();
-		
-		if((!isset($the_content[0]))){
-			
-			redirect('/upgrade/'.$i,'refresh');
-			
-		}
+		return true;
 			
 	}
 	

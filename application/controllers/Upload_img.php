@@ -1,18 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Upload_img extends CI_Controller {
+class Upload_img extends App {
 
 	function __construct()
  	{
    		parent::__construct(); 
 		
-		if(!is_logged_user()){
-			
-			header('Location: '.file_path());
-			
-			exit;	
-			
-        }
+
 		
 		$this->load->library('image_lib');
 		

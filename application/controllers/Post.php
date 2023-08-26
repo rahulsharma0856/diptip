@@ -1,18 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Post extends CI_Controller {
+class Post extends App {
 
 	function __construct(){
 		
    		parent::__construct(); 
 		
-		if(!is_logged_user()){
-			
-			header('Location: '.file_path());
-			
-			//exit;	
-			
-        }
+
 		
 		$this->load->library('image_lib');
 		
@@ -34,13 +28,7 @@ class Post extends CI_Controller {
 		
 	
 				
-		if(!is_logged_user()){
-			
-			header('Location: '.file_path());
-			
-			//exit;	
-			
-        }
+
 		
 		date_default_timezone_set('Asia/Calcutta'); 	
    		

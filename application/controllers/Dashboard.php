@@ -1,19 +1,10 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Dashboard extends CI_Controller {
+class Dashboard extends App {
 
 	function __construct()
  	{
    		parent::__construct();
-
-		if(!is_logged_user()){
-
-//			header('Location: '.file_path());
-
-			redirect('../../../errors/bad_request.php');
-
-			exit;
-        }
 
    		$this->load->model('user/social_media/post_module','ObjM',TRUE);
 
@@ -34,9 +25,6 @@ class Dashboard extends CI_Controller {
 		$this->load->model('user/Comment_model');
 
 		date_default_timezone_set('Asia/Calcutta');
-
-
-
  	}
 
 	public function view(){

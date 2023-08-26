@@ -1,5 +1,5 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
-class Registration extends CI_Controller {
+class Registration extends MY_Controller {
 	
     function __construct() {
         header('X-Frame-Options: DENY');
@@ -11,8 +11,13 @@ class Registration extends CI_Controller {
     public function view($eid='') {
         
         if($eid!=''){
-            $data['user']=$this->db->select('*')->where('username',$eid)->limit(1)->get('membermaster')->row();
+            $data['user']=$this->db->select('*')
+                ->where('username',$eid)
+                ->limit(1)->get('membermaster')->result_array();
+                
+               
         }
+    
         $this->load->view('page/registration_form',$data); 
     }
 	

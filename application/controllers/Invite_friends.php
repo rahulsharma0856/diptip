@@ -1,18 +1,10 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Invite_friends extends CI_Controller {
+class Invite_friends extends App {
 
 	function __construct()
  	{
    		parent::__construct(); 
-		
-		if(!is_logged_user()){
-			
-			header('Location: '.file_path());
-			
-			exit;	
-			
-        }
 		
 		$this->load->model('Member_module');
 		
