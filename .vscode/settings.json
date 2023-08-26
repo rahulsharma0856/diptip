@@ -1,0 +1,7 @@
+{
+  "phpformatter.arguments": ["--level=psr2"],
+  "phpcs.standard": "./phpcs.xml",
+  "php-cs-fixer.executablePath": "${extensionPath}/php-cs-fixer.phar",
+  "php-cs-fixer.allowRisky": true,
+  "php.validate.executablePath": ""
+}

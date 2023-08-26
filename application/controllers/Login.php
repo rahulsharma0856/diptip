@@ -1,10 +1,11 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class Login extends CI_Controller {
-
+class Login extends MY_Controller 
+{
 	 //Member_model
 	 
-	 function __construct(){
+	public function __construct()
+	{
 		
 		header('X-Frame-Options: DENY');
 		 
@@ -24,13 +25,14 @@ class Login extends CI_Controller {
 	 
 	function view($arr=NULL){
 		
-		$this->index($arr);
+    	$this->index($arr);
 		
 	}
 	
-	public function index($arr=NULL){  
+	public function index($arr=NULL)
+	{  
 		
-		$this -> is_block_login();
+		$this->is_block_login();
 		
 		$this -> check_login();
 		
@@ -61,11 +63,7 @@ class Login extends CI_Controller {
 			array('xss_clean' => 'Error Message: your xss is not clean.')
 			
 			);	
-			
-			
-			
-			
-			
+						
 			if ($this->form_validation->run() === FALSE){
 				
 				//$this->session->set_flashdata('show_msg', 'Invaild Username And Password');
@@ -92,19 +90,9 @@ class Login extends CI_Controller {
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	protected function _check(){
 		
-		$result	 =	$this -> Member_model -> check_login();
+		$result	 =	$this->Member_model->check_login();
 	
 		//==================record Found Check==================//
 		if(!isset($result[0])){

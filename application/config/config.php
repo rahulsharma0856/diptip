@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost/DipTip/';
+$config['base_url'] = 'http://localhost/diptip_git/';
 
 /*
 |--------------------------------------------------------------------------
@@ -521,3 +521,8 @@ $config['rewrite_short_tags'] = FALSE;
 | Array:		array('10.0.1.200', '192.168.5.0/24')
 */
 $config['proxy_ips'] = '';
+
+$config_path = APPPATH.'config/environment/'.ENVIRONMENT.'/'.basename(__FILE__);
+if (file_exists($config_path)) {
+    include $config_path;
+}

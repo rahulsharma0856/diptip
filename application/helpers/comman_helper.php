@@ -1080,4 +1080,59 @@ if(!function_exists('is_valid_password_pattern'))
 	
 }
 
+if (! function_exists('ipCheck')) {
+    function ipCheck($ip)
+    {
+        $CI =& get_instance();
+        $sql="SELECT * from ip_block where ip = '".$ip."'";  
+        $query = $CI->db->query($sql);
+        $data =  $query->result_array();
+        
+        if (!empty($data)) {
+            return $data[0];
+        }
+        return false; 
+    }
+}
+
+if (! function_exists('addIpBlockRequest')) {
+    function addIpBlockRequest($ip, $type = null)
+    {
+        $CI =& get_instance();
+        
+        $info = [
+            'ip' => $ip,
+            'url' => full_url($_SERVER ),
+            'post_data' => json_encode($_POST),
+            'get_data' => json_encode($_GET),
+            'create_at' => date('Y-m-d H:i:s'),
+            'time_info' => time(),
+            'type' => $type ?? null
+        ];
+        $CI->db->insert('ip_block_request', $info);
+    }
+}
+
+if (! function_exists('getClientIp')) {
+    function getClientIp() {
+        $ipaddress = '';
+        if (isset($_SERVER['HTTP_CLIENT_IP']))
+            $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+        else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        else if(isset($_SERVER['HTTP_X_FORWARDED']))
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+        else if(isset($_SERVER['HTTP_FORWARDED_FOR']))
+            $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+        else if(isset($_SERVER['HTTP_FORWARDED']))
+            $ipaddress = $_SERVER['HTTP_FORWARDED'];
+        else if(isset($_SERVER['REMOTE_ADDR']))
+            $ipaddress = $_SERVER['REMOTE_ADDR'];
+        else
+            $ipaddress = 'UNKNOWN';
+            
+        return $ipaddress;
+    }
+}
+
 

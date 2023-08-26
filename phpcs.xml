@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<ruleset name="PHP Coding Standards">
+    <description>PHP Coding Standards</description>
+    <rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
+    <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
+    <rule ref="Generic.Strings.UnnecessaryStringConcat"/>
+    <rule ref="Squiz.Classes.ValidClassName.NotCamelCaps">
+        <exclude-pattern>*</exclude-pattern>
+    </rule>
+    <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+        <severity>0</severity>
+    </rule>
+    <rule ref="PSR2" />
+    <rule ref="PSR2.Methods.MethodDeclaration.Underscore">
+        <severity>0</severity>
+    </rule>
+    <rule ref="PSR1.Methods.CamelCapsMethodName">
+        <exclude-pattern>application/controllers/*</exclude-pattern>
+    </rule>
+    <arg name="colors"/>
+    <exclude-pattern>vendor</exclude-pattern>
+    <exclude-pattern>application/third_party</exclude-pattern>
+    <exclude-pattern>libraries</exclude-pattern>
+    <exclude-pattern>application/tests/_ci_php_unit</exclude-pattern>
+    <file>application/</file>
+    <exclude-pattern>application/</exclude-pattern>
+</ruleset>
