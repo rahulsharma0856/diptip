@@ -1,7 +1,8 @@
 {
   "phpformatter.arguments": ["--level=psr2"],
   "phpcs.standard": "./phpcs.xml",
-  "php-cs-fixer.executablePath": "${extensionPath}/php-cs-fixer.phar",
+  "php-cs-fixer.executablePath": "C:\\Users\\DC\\AppData\\Roaming\\Composer\\vendor\\bin",
   "php-cs-fixer.allowRisky": true,
-  "php.validate.executablePath": ""
+  "php.validate.executablePath": "",
+  "phpCodeSniffer.autoExecutable": true
 }

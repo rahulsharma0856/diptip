@@ -6,6 +6,10 @@ if (! defined('BASEPATH')) {
 
 class Dashboard extends App
 {
+    /**
+        @property load $this->load
+    */
+    
     public function __construct()
     {
         parent::__construct();
@@ -242,7 +246,7 @@ class Dashboard extends App
     public function ajax_load_more_likes(int $postid, $start_from)
     {
         $like_rs = $this->Post_model->getWhoLikesbyPostid($postid, $start_from);
-
+		$output = "";
         if(count($like_rs) > 0) {
             for($i = 0;$i < count($like_rs);$i++) {
                 $output .= '<li style="padding: 5px 10px !important;">
