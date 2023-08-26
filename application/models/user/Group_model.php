@@ -1,5 +1,5 @@
 <?php
-Class Group_model extends CI_Model{
+Class Group_model extends App_model{
 	
 	
 	function isAdmin($id = NULL){

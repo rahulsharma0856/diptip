@@ -1,5 +1,5 @@
 <?php
-Class Upload_img_module extends CI_Model
+Class Upload_img_module extends App_model
 {
 	
 	

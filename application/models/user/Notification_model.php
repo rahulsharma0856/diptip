@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-Class Notification_model extends CI_Model
+Class Notification_model extends App_model
 {
 	
 	

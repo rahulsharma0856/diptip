@@ -1,5 +1,5 @@
 <?php
-Class Email_module extends CI_Model
+Class Email_module extends App_model
 {
 	
 		function get_list_all()

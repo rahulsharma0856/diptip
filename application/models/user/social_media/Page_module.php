@@ -1,5 +1,5 @@
 <?php
-Class Page_module extends CI_Model
+Class Page_module extends App_model
 {
 	
 	

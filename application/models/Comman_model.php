@@ -1,8 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-Class Comman_model extends CI_Model
+Class Comman_model extends App_model
 {
-
-
 		function active_ticket(){
 			
 			$uid = $this->session->userdata['smr_web_login']['usercode'];

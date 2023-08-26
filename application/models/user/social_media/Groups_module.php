@@ -1,5 +1,5 @@
 <?php
-Class Groups_module extends CI_Model
+Class Groups_module extends App_model
 {
 	
 	

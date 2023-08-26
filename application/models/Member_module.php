@@ -1,5 +1,5 @@
 <?php
-Class Member_module extends CI_Model
+Class Member_module extends App_model
 {
 	
 	function is_paid($uid){

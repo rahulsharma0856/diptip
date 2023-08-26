@@ -1,5 +1,5 @@
 <?php
-Class Share_link_module extends CI_Model{
+Class Share_link_module extends App_model{
 	
 	
 	function get_info_api($url = NULL)

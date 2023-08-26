@@ -1,5 +1,5 @@
 <?php
-Class Chat_model extends CI_Model{
+Class Chat_model extends App_model{
 	
 	
 	function getOnlineFriend(){

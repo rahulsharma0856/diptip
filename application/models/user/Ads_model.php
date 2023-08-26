@@ -1,5 +1,5 @@
 <?php
-Class Ads_model extends CI_Model{
+Class Ads_model extends App_model{
 	
 	
 	function getAdsForView($ads_code_list = NULL){

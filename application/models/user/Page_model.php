@@ -1,5 +1,5 @@
 <?php
-Class Page_model extends CI_Model{
+Class Page_model extends App_model{
 	
 	
 	function isAdmin($page_code = NULL){

@@ -1,5 +1,5 @@
 <?php
-Class Support_module extends CI_Model
+Class Support_module extends App_model
 {
 	
 		function get_list_all($type)

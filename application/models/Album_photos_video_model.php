@@ -1,5 +1,5 @@
 <?php
-Class Album_photos_video_model extends CI_Model
+Class Album_photos_video_model extends App_model
 {
 		
 		

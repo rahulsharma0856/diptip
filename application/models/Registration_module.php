@@ -1,5 +1,5 @@
 <?php
-Class registration_module extends CI_Model
+Class registration_module extends App_model
 {
 	
 	function get_user($eid)

@@ -1,5 +1,5 @@
 <?php
-Class Post_module extends CI_Model
+Class Post_module extends App_model
 {
 	
 	

@@ -1,5 +1,8 @@
 {
     "require": {
         "friendsofphp/php-cs-fixer": "^3.23"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.7"
     }
 }

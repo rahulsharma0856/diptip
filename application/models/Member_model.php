@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-Class Member_model extends CI_Model
+Class Member_model extends App_model
 {
 	
 	

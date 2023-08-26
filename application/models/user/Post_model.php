@@ -1,5 +1,5 @@
 <?php
-Class Post_model extends CI_Model{
+Class Post_model extends App_model{
 	
 	
 	function get_post($post_id){

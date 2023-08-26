@@ -1,5 +1,5 @@
 <?php
-Class Comment_model extends CI_Model{
+Class Comment_model extends App_model{
 	
 	
 	function get_post($post_id){

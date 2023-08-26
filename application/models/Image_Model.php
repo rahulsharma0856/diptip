@@ -1,5 +1,5 @@
 <?php
-Class Image_Model extends CI_Model
+Class Image_Model extends App_model
 {
 	
 		function __construct(){

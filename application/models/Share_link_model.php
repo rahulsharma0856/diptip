@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-Class Share_link_model extends CI_Model{
+Class Share_link_model extends App_model{
 	
 	
 	function get_info_api($url = NULL)

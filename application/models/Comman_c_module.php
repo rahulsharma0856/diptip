@@ -1,5 +1,5 @@
 <?php
-Class Comman_c_module extends CI_Model
+Class Comman_c_module extends App_model
 {
 
 		function filter_member(){

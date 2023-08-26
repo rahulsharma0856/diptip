@@ -1,7 +1,7 @@
 <?php
 
 
-Class Skill_model extends CI_Model
+Class Skill_model extends App_model
 {
 	function getSkill()
     {

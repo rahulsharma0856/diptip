@@ -1,5 +1,5 @@
 <?php
-Class Notification_module extends CI_Model
+Class Notification_module extends App_model
 {
 	
 	

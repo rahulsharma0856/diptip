@@ -8,7 +8,7 @@ class Dashboard extends App {
 
    		$this->load->model('user/social_media/post_module','ObjM',TRUE);
 
-	     $this->load->model('user/social_media/Page_module','',TRUE);
+	    $this->load->model('user/social_media/Page_module','',TRUE);
 
 		$this->load->model('user/social_media/groups_module','',TRUE);
 //
@@ -392,5 +392,3 @@ class Dashboard extends App {
 
 
 }
-
-

@@ -1,5 +1,5 @@
 <?php
-Class Search_model extends CI_Model{
+Class Search_model extends App_model{
 	
 
 	function find_member($filter_by, $start_from = 0, $limit = 4){
