@@ -1,16 +1,23 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php
 
-class Member extends CI_Controller {
-    function __construct() {
+if (!defined('BASEPATH')) {
+    exit('No direct script access allowed');
+}
+
+class Member extends CI_Controller
+{
+    public function __construct()
+    {
         parent::__construct();
         if (!is_logged_admin()) {
             header('Location: ' . file_path() . 'login');
             exit;
         }
-        $this->load->model('admin/Admin_model', 'ObjM', TRUE);
+        $this->load->model('admin/Admin_model', 'ObjM', true);
         $this->load->model('Member_model');
     }
-    function all() {
+    public function all()
+    {
         $page_info['page_title'] = 'Members';
         $data['sub_title'] = 'Message To Member';
         $page_info['menu_id'] = 'menu-members';
@@ -19,7 +26,8 @@ class Member extends CI_Controller {
         $this->load->view('admin/member_view', $data);
         $this->load->view('admin/comman/footer_admin');
     }
-    function listing() {
+    public function listing()
+    {
         $data = $this->ObjM->get_list_all();
         $result = $data['result'];
         $count = $this->ObjM->count_record_all($data['where']);
@@ -31,7 +39,8 @@ class Member extends CI_Controller {
         }
         echo json_encode($output);
     }
-    function view($eid) {
+    public function view($eid)
+    {
         $panel = 'profile';
         $data['panel'] = $panel;
         $page_info['menu_id'] = 'menu-members';

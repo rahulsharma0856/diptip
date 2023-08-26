@@ -1,90 +1,95 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-Class Notification_model extends App_model
+<?php
+
+if (! defined('BASEPATH')) {
+    exit('No direct script access allowed');
+}
+class Notification_model extends App_model
 {
-	
-	
-	function add_invitation($uid = NULL , $pg_id = NULL){
-		
-		if($uid != NULL && $pg_id != NULL){
-			
-			$data = array(
-				
-				'pg_id' => $pg_id,
-				
-				'usercode' => $uid,
-				
-				'invite_by' => user_session('usercode'),
-				
-				'time_dt' => time()
-				
-			);
-			
-			$id = $this->comman_fun->addItem($data,'social_invite');
-					
-			
-			$array = array(
-			
-				'type' => 'Invite',
-				
-				'usercode' => $uid ,
-				
-				'usercode2' => user_session('usercode'),
-				
-				'pgCode' => $pg_id 
-			
-			);
-			
-			$this->add_notification($array);
-			
-		}
-		
-	}
-	
-	
-	function add_notification($arr = array()){
-		
-		if(!empty($arr)){
-		
-			$data = array(
-				
-				'type' 		=> 	(isset($arr['type'])) ? $arr['type'] : '',
-				
-				'usercode'  => (isset($arr['usercode'])) ? $arr['usercode'] : '0',
-				
-				'usercode2' => (isset($arr['usercode2'])) ? $arr['usercode2'] : '0',
-				
-				'pgCode' 	=> (isset($arr['pgCode'])) ? $arr['pgCode'] : '0',
-				
-				'post_id' 	=> (isset($arr['post_id'])) ? $arr['post_id'] : '0',
-				
-				'comment_id'=> (isset($arr['comment_id'])) ? $arr['comment_id'] : '0',
-				
-				'status' 	=> 0,
-				
-				'timedt' 	=> time()
-			
-			);
-			
-			$id = $this->comman_fun->addItem($data,'social_notification');
-		
-		}
-		
-	}
-	
-	
-	
-	
-	function getMemberFilterFriendForPG($uid = NULL, $pg_id = NULL ,$start = 0, $filter = NULL, $limit = 10){
-			
-			$where = "";
-			
-			if($filter!=NULL){
-				
-				$where = ' AND (m.fname LIKE "%'.$this->db->escape_like_str($filter).'%" OR m.lname LIKE "%'.$this->db->escape_like_str($filter).'%") ';
-				
-			}
-			
-			$sQuery ='SELECT social_friends_detail.*,
+    public function add_invitation($uid = null, $pg_id = null)
+    {
+
+        if($uid != null && $pg_id != null) {
+
+            $data = array(
+
+                'pg_id' => $pg_id,
+
+                'usercode' => $uid,
+
+                'invite_by' => user_session('usercode'),
+
+                'time_dt' => time()
+
+            );
+
+            $id = $this->comman_fun->addItem($data, 'social_invite');
+
+
+            $array = array(
+
+                'type' => 'Invite',
+
+                'usercode' => $uid ,
+
+                'usercode2' => user_session('usercode'),
+
+                'pgCode' => $pg_id
+
+            );
+
+            $this->add_notification($array);
+
+        }
+
+    }
+
+
+    public function add_notification($arr = array())
+    {
+
+        if(!empty($arr)) {
+
+            $data = array(
+
+                'type' 		=> 	(isset($arr['type'])) ? $arr['type'] : '',
+
+                'usercode'  => (isset($arr['usercode'])) ? $arr['usercode'] : '0',
+
+                'usercode2' => (isset($arr['usercode2'])) ? $arr['usercode2'] : '0',
+
+                'pgCode' 	=> (isset($arr['pgCode'])) ? $arr['pgCode'] : '0',
+
+                'post_id' 	=> (isset($arr['post_id'])) ? $arr['post_id'] : '0',
+
+                'comment_id' => (isset($arr['comment_id'])) ? $arr['comment_id'] : '0',
+
+                'status' 	=> 0,
+
+                'timedt' 	=> time()
+
+            );
+
+            $id = $this->comman_fun->addItem($data, 'social_notification');
+
+        }
+
+    }
+
+
+
+
+    public function getMemberFilterFriendForPG($uid = null, $pg_id = null, $start = 0, $filter = null, $limit = 10)
+    {
+
+        $where = "";
+
+        if($filter != null) {
+
+            $where = ' AND (m.fname LIKE "%'.$this->db->escape_like_str($filter).'%" OR m.lname LIKE "%'.$this->db->escape_like_str($filter).'%") ';
+
+        }
+
+        $sQuery = 'SELECT social_friends_detail.*,
 			
 			CONCAT(m.fname," ",m.lname) as name, m.username as username, m.profile_img as profile_img,
 			
@@ -109,32 +114,34 @@ Class Notification_model extends App_model
 			LIMIT '.$start.', '.$limit.'
 			
 			';
-			
-			$query = $this->db->query($sQuery);
-			
-			$the_content = $query->result_array();
-			
-			return $the_content;
-		
-	}
-	
-	
-	function getTotalNotification($uid = NULL){
-		
-		$sQuery =' SELECT COUNT(id) as tot FROM social_notification WHERE usercode = '.$this->db->escape($uid).' AND status = "0"';
-			
-		$query = $this->db->query($sQuery);
-			
-		$the_content = $query->result_array();
-			
-		return (int)$the_content[0]['tot'];
-		
-	}
-	
-	
-	function getQuickNotificationList($uid = NULL){
-		
-		$sQuery ='
+
+        $query = $this->db->query($sQuery);
+
+        $the_content = $query->result_array();
+
+        return $the_content;
+
+    }
+
+
+    public function getTotalNotification($uid = null)
+    {
+
+        $sQuery = ' SELECT COUNT(id) as tot FROM social_notification WHERE usercode = '.$this->db->escape($uid).' AND status = "0"';
+
+        $query = $this->db->query($sQuery);
+
+        $the_content = $query->result_array();
+
+        return (int)$the_content[0]['tot'];
+
+    }
+
+
+    public function getQuickNotificationList($uid = null)
+    {
+
+        $sQuery = '
 		
 		SELECT social_notification.*, 
 		
@@ -153,19 +160,20 @@ Class Notification_model extends App_model
 		WHERE social_notification.usercode = '.$this->db->escape($uid).'  AND social_notification.status = "0" AND social_notification.quick_view = "0"
 		
 		ORDER BY social_notification.timedt DESC';
-			
-		$query = $this->db->query($sQuery);
-			
-		$the_content = $query->result_array();
-			
-		return $the_content;
-		
-	}
+
+        $query = $this->db->query($sQuery);
+
+        $the_content = $query->result_array();
+
+        return $the_content;
+
+    }
 
 
-	function getNotificationList($uid = NULL){
-		
-		$sQuery ='
+    public function getNotificationList($uid = null)
+    {
+
+        $sQuery = '
 		
 		SELECT social_notification.*, 
 		
@@ -184,45 +192,48 @@ Class Notification_model extends App_model
 		WHERE social_notification.usercode = '.$this->db->escape($uid).'
 		
 		ORDER BY social_notification.timedt DESC';
-			
-		$query = $this->db->query($sQuery);
-			
-		$the_content = $query->result_array();
-			
-		return $the_content;
-		
-	}
-	
-	function updateNotificationStatus(){
-	
-		$data = array(
-			
-			'status' => 1
-			
-		);
-		
-		$this->comman_fun->update($data,'social_notification',array('usercode'=> user_session('usercode'),'status'=>0));	
-	
-	}
-	
-	function updateQuickNotificationStatus(){
-		
-		$data = array(
-			
-			'quick_view' => '1'
-			
-		);
-		
-		$this->comman_fun->update($data,'social_notification',array('usercode'=> user_session('usercode'),'quick_view'=>'0'));
-		
-	}
-	
-	
-	function getNewLikesPost(){
-		
-		$time = time() - 10;
-		
-		$sQuery = 'SELECT social_likes.post_id
+
+        $query = $this->db->query($sQuery);
+
+        $the_content = $query->result_array();
+
+        return $the_content;
+
+    }
+
+    public function updateNotificationStatus()
+    {
+
+        $data = array(
+
+            'status' => 1
+
+        );
+
+        $this->comman_fun->update($data, 'social_notification', array('usercode' => user_session('usercode'),'status' => 0));
+
+    }
+
+    public function updateQuickNotificationStatus()
+    {
+
+        $data = array(
+
+            'quick_view' => '1'
+
+        );
+
+        $this->comman_fun->update($data, 'social_notification', array('usercode' => user_session('usercode'),'quick_view' => '0'));
+
+    }
+
+
+    public function getNewLikesPost()
+    {
+
+        $time = time() - 10;
+
+        $sQuery = 'SELECT social_likes.post_id
 		
 		FROM `social_likes` 
 	
@@ -231,13 +242,13 @@ Class Notification_model extends App_model
 		WHERE social_likes.`time_dt` > '.$time.' AND p.added_by = "'.user_session('usercode').'"
 		
 		GROUP BY social_likes.post_id';
-		
-		$query = $this->db->query($sQuery);
-			
-		$the_content1 = $query->result_array();
-		
-		
-		$sQuery = 'SELECT social_likes.post_id
+
+        $query = $this->db->query($sQuery);
+
+        $the_content1 = $query->result_array();
+
+
+        $sQuery = 'SELECT social_likes.post_id
 		
 		FROM `social_likes` 
 	
@@ -248,61 +259,63 @@ Class Notification_model extends App_model
 		WHERE social_likes.`time_dt` > '.$time.'
 		
 		GROUP BY social_likes.post_id';
-		
-		$query = $this->db->query($sQuery);
-			
-		$the_content2 = $query->result_array();
-		
-		$the_content = array_merge($the_content1,$the_content2);
-		
-		
-		$arr = array();
-		
-		$count = array();
-		
 
-		for($i=0;$i<count($the_content);$i++){
-		
-			$arr[] = $the_content[$i]['post_id'];
-		
-		}
-		
-		if(count($arr) > 0){
-			
-			$count = $this->getCountNewLikesOnPost($arr);
-			
-		}
-		
-		
-		return $count;
-		
-	}
-	
-	
-	function getCountNewLikesOnPost($arr){
-	
-		$sQuery = 'SELECT social_likes.post_id,COUNT(social_likes.post_id) as tot
+        $query = $this->db->query($sQuery);
+
+        $the_content2 = $query->result_array();
+
+        $the_content = array_merge($the_content1, $the_content2);
+
+
+        $arr = array();
+
+        $count = array();
+
+
+        for($i = 0;$i < count($the_content);$i++) {
+
+            $arr[] = $the_content[$i]['post_id'];
+
+        }
+
+        if(count($arr) > 0) {
+
+            $count = $this->getCountNewLikesOnPost($arr);
+
+        }
+
+
+        return $count;
+
+    }
+
+
+    public function getCountNewLikesOnPost($arr)
+    {
+
+        $sQuery = 'SELECT social_likes.post_id,COUNT(social_likes.post_id) as tot
 		
 		FROM `social_likes` 
 	
-		WHERE social_likes.post_id IN ('.implode(", ",$arr).')
+		WHERE social_likes.post_id IN ('.implode(", ", $arr).')
 		
 		GROUP BY social_likes.post_id';
-		
-		$query = $this->db->query($sQuery);
-			
-		$the_content = $query->result_array();	
-		
-		return $the_content;
-		
-	}
-	
-	
-	function getNewCommentPostID(){
-		
-		$time = time() - 10;
-		
-		$sQuery = 'SELECT social_comments.post_id
+
+        $query = $this->db->query($sQuery);
+
+        $the_content = $query->result_array();
+
+        return $the_content;
+
+    }
+
+
+    public function getNewCommentPostID()
+    {
+
+        $time = time() - 10;
+
+        $sQuery = 'SELECT social_comments.post_id
 		
 		FROM `social_comments` 
 	
@@ -311,13 +324,13 @@ Class Notification_model extends App_model
 		WHERE social_comments.`time_dt` > '.$time.' AND p.added_by = "'.user_session('usercode').'"
 		
 		GROUP BY social_comments.post_id';
-		
-		$query = $this->db->query($sQuery);
-			
-		$the_content1 = $query->result_array();
-		
-		
-		$sQuery = 'SELECT social_comments.post_id
+
+        $query = $this->db->query($sQuery);
+
+        $the_content1 = $query->result_array();
+
+
+        $sQuery = 'SELECT social_comments.post_id
 		
 		FROM `social_comments` 
 	
@@ -328,91 +341,92 @@ Class Notification_model extends App_model
 		WHERE social_comments.`time_dt` > '.$time.'
 		
 		GROUP BY social_comments.post_id';
-		
-		$query = $this->db->query($sQuery);
-			
-		$the_content2 = $query->result_array();
-	
-		$the_content = array_merge($the_content1, $the_content2);
-		
-		$arr = array();
-		
-		$count = array();
-		
-		$newComemt = array();
-		
-		for($i=0;$i<count($the_content);$i++){
-		
-			$arr[] = $the_content[$i]['post_id'];
-		
-		}
-		
-		if(count($arr) > 0){
-			
-			$count = $this->getCountNewCommentOnPost($arr);
-			
-			$newComemt = $this->getNewCommentPostList($arr);
-			
-			
-			
-		}
-		
-		
-		return array(
-		
-			'count' => $count,
-			
-			'newComment' => $newComemt
-		
-		);
-		
-		
-	}
-	
-	
-	function getCountNewCommentOnPost($arr){
-	
-		$sQuery = 'SELECT social_comments.post_id,COUNT(social_comments.post_id) as tot
+
+        $query = $this->db->query($sQuery);
+
+        $the_content2 = $query->result_array();
+
+        $the_content = array_merge($the_content1, $the_content2);
+
+        $arr = array();
+
+        $count = array();
+
+        $newComemt = array();
+
+        for($i = 0;$i < count($the_content);$i++) {
+
+            $arr[] = $the_content[$i]['post_id'];
+
+        }
+
+        if(count($arr) > 0) {
+
+            $count = $this->getCountNewCommentOnPost($arr);
+
+            $newComemt = $this->getNewCommentPostList($arr);
+
+
+
+        }
+
+
+        return array(
+
+            'count' => $count,
+
+            'newComment' => $newComemt
+
+        );
+
+
+    }
+
+
+    public function getCountNewCommentOnPost($arr)
+    {
+
+        $sQuery = 'SELECT social_comments.post_id,COUNT(social_comments.post_id) as tot
 		
 		FROM `social_comments` 
 	
-		WHERE social_comments.post_id IN ('.implode(", ",$arr).')
+		WHERE social_comments.post_id IN ('.implode(", ", $arr).')
 		
 		GROUP BY social_comments.post_id';
-		
-		$query = $this->db->query($sQuery);
-			
-		$the_content = $query->result_array();	
-		
-		return $the_content;
-	
-	}
-	
-	
-	function getNewCommentPostList($arr){
-		
-		$time = time() - 10;
-		
-		$this -> db -> select('c.*');
-		
-		$this -> db -> select('CONCAT(u.fname," ",u.lname) as member_name, u.username as member_username, u.profile_img as member_profile_img');
-		
-		$this -> db -> from('social_comments c');
-		
-		$this -> db -> join('membermaster u','c.usercode = u.usercode','left');
-		
-		$this -> db -> where('c.post_id IN ('.implode(", ",$arr).')');
-		
-		$this -> db -> where('c.time_dt >', $time);
-		
-		$query = $this -> db -> get();
-		
-    	$the_content = $query->result_array();
-		
-    	return $the_content;	
-		
-	}
-	
-	
+
+        $query = $this->db->query($sQuery);
+
+        $the_content = $query->result_array();
+
+        return $the_content;
+
+    }
+
+
+    public function getNewCommentPostList($arr)
+    {
+
+        $time = time() - 10;
+
+        $this -> db -> select('c.*');
+
+        $this -> db -> select('CONCAT(u.fname," ",u.lname) as member_name, u.username as member_username, u.profile_img as member_profile_img');
+
+        $this -> db -> from('social_comments c');
+
+        $this -> db -> join('membermaster u', 'c.usercode = u.usercode', 'left');
+
+        $this -> db -> where('c.post_id IN ('.implode(", ", $arr).')');
+
+        $this -> db -> where('c.time_dt >', $time);
+
+        $query = $this -> db -> get();
+
+        $the_content = $query->result_array();
+
+        return $the_content;
+
+    }
+
+
 }
-?>

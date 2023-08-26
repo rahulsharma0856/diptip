@@ -1,228 +1,215 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
 
-class Dashboard extends App {
+if (! defined('BASEPATH')) {
+    exit('No direct script access allowed');
+}
 
-	function __construct()
- 	{
-   		parent::__construct();
+class Dashboard extends App
+{
+    public function __construct()
+    {
+        parent::__construct();
 
-   		$this->load->model('user/social_media/post_module','ObjM',TRUE);
+        $this->load->model('user/social_media/post_module', 'ObjM', true);
+        $this->load->model('user/social_media/Page_module', '', true);
+        $this->load->model('user/social_media/groups_module', '', true);
+        $this->load->model('user/Page_model', '', true);
+        $this->load->model('user/Post_model', '', true);
+        $this->load->model('user/Group_model', '', true);
+        $this->load->model('user/Ads_model', '', true);
+        $this->load->model('Member_module', '', true);
+        $this->load->model('user/Comment_model');
 
-	    $this->load->model('user/social_media/Page_module','',TRUE);
+        date_default_timezone_set('Asia/Calcutta');
+    }
 
-		$this->load->model('user/social_media/groups_module','',TRUE);
-//
-		$this->load->model('user/Page_model','',TRUE);
+    public function view()
+    {
 
-		$this->load->model('user/Post_model','',TRUE);
+        //$this -> Member_module -> check_paid(user_session('usercode'));
 
-		$this->load->model('user/Group_model','',TRUE);
+        $limit = 3; //dashboard sidebar item limit
 
-		$this->load->model('user/Ads_model','',TRUE);
+        $data['MemberLikedPages'] 	= 	$this->Page_model->getMemberLikedPages(user_session('usercode'), $limit);
 
-		$this->load->model('Member_module','',TRUE);
+        if(isset($data['MemberLikedPages'][0])) {
+            $likedpage = 'Yes';
+        } else {
+            $likedpage = 'No';
+        }
 
-		$this->load->model('user/Comment_model');
 
-		date_default_timezone_set('Asia/Calcutta');
- 	}
+        $data['PageSuggestion'] 	= 	$this->Page_model->getPageSuggestion($likedpage);
+        $data['SuggestedFriends'] 	= 	$this->Member_module->Suggested_friends(user_session('usercode'));
+        $data['RecentFriends'] 	= 	$this->Member_module->get_last_recent_friends_pic(user_session('usercode'));
 
-	public function view(){
+        $data['paid_sts']			=	$this->Member_module->is_paid(user_session('usercode'));
+        $data['myGroups'] 			= 	$this->Group_model->getMemberJoinedGroups(user_session('usercode'), $limit);
 
-		//$this -> Member_module -> check_paid(user_session('usercode'));
+        $this->template->data = data;
+        $this->template->title = 'Login';
+        $this->template->view = 'user/home/dashboard_view';
+        $this->load->view('user/layout');
 
-		$limit = 3; //dashboard sidebar item limit
+    }
 
-		$data['MemberLikedPages'] 	= 	$this->Page_model->getMemberLikedPages(user_session('usercode'),$limit);
+    public function load_post()
+    {
 
-		if(isset($data['MemberLikedPages'][0]))
-		{
-			$likedpage = 'Yes';
-		}
-		else
-		{
-			$likedpage = 'No';
-		}
+        $html = $this->ajax_timeline_post();
+        $data = [
+            'html' => $html,
+            'id' => ($html == "") ? '0' : '1'
+        ];
 
+        echo json_encode($data);
 
-		$data['PageSuggestion'] 	= 	$this->Page_model->getPageSuggestion($likedpage);
+        exit;
 
-		$data['SuggestedFriends'] 	= 	$this->Member_module->Suggested_friends(user_session('usercode'));
+    }
 
-		$data['RecentFriends'] 	= 	$this->Member_module->get_last_recent_friends_pic(user_session('usercode'));
-		//$data['balance']			=	$this->Member_module->payment_summery_by_wallet(user_session('usercode'),'USD');
 
-		$data['paid_sts']			=	$this->Member_module->is_paid(user_session('usercode'));
 
-		$data['myGroups'] 			= 	$this->Group_model->getMemberJoinedGroups(user_session('usercode'),$limit);
-		
-		$this->load->view('user/home/comman/topheader');  //not loaded
+    public function ajax_timeline_post()
+    {
 
-		$this->load->view('user/home/comman/header');
+        $start_from  	=  isset($_GET['s']) ? $_GET['s'] : 0;
 
-		$this->load->view('user/home/dashboard_view',$data);
+        $result     	=  $this	->	Post_model	->	getMemberHomePost($start_from);
 
-		$this->load->view('user/home/comman/footer');
+        $ads     		=  $this	->	Ads_model	->	getAdsForView($_GET['ads']);
 
-	}
 
-	function load_post(){
+        //echo $this -> db -> last_query();
 
-		$html = $this->ajax_timeline_post();
+        $html			= '';
 
-		$data = array(
+        for($i = 0;$i < count($result);$i++) {
 
-			'html' => $html,
+            $html .= $this->load->view('user/post/post_single', array('result' => $result[$i]), true);
 
-			'id' => ($html=="") ? '0' : '1'
+        }
 
-		);
+        for($i = 0;$i < count($ads);$i++) {
 
-		echo json_encode($data);
+            $html .= $this->load->view('user/ads/single', array('result' => $ads[$i]), true);
 
-		exit;
+        }
 
-	}
+        return $html;
+    }
 
+    public function find_member()
+    {
 
+        $arr = array();
 
-	function ajax_timeline_post(){
+        if($_GET['q'] != '') {
 
-		$start_from  	=  isset($_GET['s']) ? $_GET['s'] : 0;
+            $result     	=  $this->Member_module->find_member($start_from);
 
-		$result     	=  $this	->	Post_model	->	getMemberHomePost($start_from);
+            for($i = 0;$i < count($result);$i++) {
 
-		$ads     		=  $this	->	Ads_model	->	getAdsForView($_GET['ads']);
+                $arr[] = array(
 
+                    'name' => $result[$i]['name'],
 
-		//echo $this -> db -> last_query();
+                    'value' => $result[$i]['username'],
 
-		$html			= '';
+                    'image' => thumb($result[$i]['profile_img'], 100, 100),
 
-		for($i=0;$i<count($result);$i++){
+                    'message' => $result[$i]['username'],
 
-			$html .= $this->load->view('user/post/post_single',array('result'=>$result[$i]),true);
+                    'icon' => '',
 
-		}
+                    'url' => file_path('profile/view/'.$result[$i]['username'])
 
-		for($i=0;$i<count($ads);$i++){
+                );
+            }
 
-			$html .= $this->load->view('user/ads/single',array('result'=>$ads[$i]),true);
+        }
+        echo json_encode($arr);
 
-		}
+        exit;
 
-		return $html;
-	}
+    }
 
-	function find_member(){
 
-		$arr = array();
+    public function checkNewMessages()
+    {
 
-		if($_GET['q']!=''){
+        $data = array();
 
-			$result     	=  $this->Member_module->find_member($start_from);
+        if(isset($_GET['last'])) {
 
-			for($i=0;$i<count($result);$i++){
+            $last 	= $_GET['last'];
 
-					$arr[] = array(
+            if($this->Post_model->checkMemberHomeNewMessages($last)) {
 
-						'name' => $result[$i]['name'],
+                $result = $this->Post_model->getMemberHomeNewMessages($last);
 
-						'value' => $result[$i]['username'],
+                for($i = 0;$i < count($result);$i++) {
 
-						'image' => thumb($result[$i]['profile_img'],100,100),
+                    $data['post'.$result[$i]['post_id']] = $this->load->view('user/post/post_single', array('result' => $result[$i]), true);
 
-						'message' => $result[$i]['username'],
+                }
 
-						'icon' => '',
+            }
 
-						'url' => file_path('profile/view/'.$result[$i]['username'])
+        }
 
-					);
-			}
+        echo json_encode($data);
 
-		}
-		echo json_encode($arr);
+        exit;
 
-		exit;
+    }
 
-	}
 
 
-	function checkNewMessages(){
 
-		$data = array();
+    public function post(int $postid)
+    {
 
-		if(isset($_GET['last'])){
+        //$this -> Member_module -> check_paid(user_session('usercode'));
 
-			$last 	= $_GET['last'];
+        $data = array();
 
-			if($this->Post_model->checkMemberHomeNewMessages($last)){
+        $data['result']   =  $this->Post_model->getPostById($postid);
+        //var_dump($data);exit;
+        if(isset($data['result'])) {
 
-				$result = $this->Post_model->getMemberHomeNewMessages($last);
+            $this->load->view('user/home/comman/topheader');
 
-				for($i=0;$i<count($result);$i++){
+            $this->load->view('user/home/comman/header');
 
-					$data['post'.$result[$i]['post_id']] = $this->load->view('user/post/post_single',array('result'=>$result[$i]),true);
+            $this->load->view('user/post/post_single_view', $data);
 
-				}
+            $this->load->view('user/home/comman/footer');
 
-			}
+        } else {
 
-		}
+            $this->load->view('user/not_found');
 
-		echo json_encode($data);
+        }
 
-		exit;
 
-	}
 
+    }
 
+    public function getWhoPostLikesMember(int $postid)
+    {
 
+        $like_rs = $this->Post_model->getWhoLikesbyPostid($postid);
 
-	public function post(int $postid){
+        $output = '';
 
-		//$this -> Member_module -> check_paid(user_session('usercode'));
-
-		$data = array();
-
-		$data['result']   =  $this->Post_model->getPostById($postid);
-		//var_dump($data);exit;
-		if(isset($data['result'])){
-
-			$this->load->view('user/home/comman/topheader');
-
-			$this->load->view('user/home/comman/header');
-
-			$this->load->view('user/post/post_single_view',$data);
-
-			$this->load->view('user/home/comman/footer');
-
-		}else{
-
-			$this->load->view('user/not_found');
-
-		}
-
-
-
-	}
-
-	function getWhoPostLikesMember(int $postid)
-	{
-
-		$like_rs = $this->Post_model->getWhoLikesbyPostid($postid);
-
-		$output ='';
-
-		$output .= '<div class="mCustomScrollbar" data-mcs-theme="dark">
+        $output .= '<div class="mCustomScrollbar" data-mcs-theme="dark">
 					<ul class="notification-list" id="post-likes-members'.$postid.'">';
 
-						for($i=0;$i<count($like_rs);$i++)
-						{
-							$output .='<li style="padding: 5px 10px !important;">
+        for($i = 0;$i < count($like_rs);$i++) {
+            $output .= '<li style="padding: 5px 10px !important;">
 								<div class="author-thumb" style="height: 35px;width: 35px;">
-									<img src="'.thumb(ProfileImg($like_rs[$i]['profile_img']),35,35).'" alt="author">
+									<img src="'.thumb(ProfileImg($like_rs[$i]['profile_img']), 35, 35).'" alt="author">
 								</div>
 								<div style="width:76%;padding-left:5px;" class="notification-event">
 
@@ -233,37 +220,34 @@ class Dashboard extends App {
 								</div>
 							</li>';
 
-						}
-					$output .='</ul>';
+        }
+        $output .= '</ul>';
 
-					$totpostlike = $this->Post_model->countPostTotalLikes($postid);
+        $totpostlike = $this->Post_model->countPostTotalLikes($postid);
 
-					if($totpostlike>5)
-					{
-						$output .='<div style="text-align:center;margin-top:10px;">
+        if($totpostlike > 5) {
+            $output .= '<div style="text-align:center;margin-top:10px;">
 							<a class="load_more_likes" id="load_more_likes" value="'.$postid.'" href="#">
 								<span>View more likes +</span>
 							</a>
 						</div>';
-					}
+        }
 
 
-					$output .='</div>';
+        $output .= '</div>';
 
-		echo $output;
-	}
+        echo $output;
+    }
 
-	function ajax_load_more_likes(int $postid,$start_from)
-	{
-		$like_rs = $this->Post_model->getWhoLikesbyPostid($postid,$start_from);
+    public function ajax_load_more_likes(int $postid, $start_from)
+    {
+        $like_rs = $this->Post_model->getWhoLikesbyPostid($postid, $start_from);
 
-		if(count($like_rs)>0)
-		{
-			for($i=0;$i<count($like_rs);$i++)
-			{
-				$output .='<li style="padding: 5px 10px !important;">
+        if(count($like_rs) > 0) {
+            for($i = 0;$i < count($like_rs);$i++) {
+                $output .= '<li style="padding: 5px 10px !important;">
 							<div class="author-thumb" style="height: 35px;width: 35px;">
-								<img src="'.thumb(ProfileImg($like_rs[$i]['profile_img']),35,35).'" alt="author">
+								<img src="'.thumb(ProfileImg($like_rs[$i]['profile_img']), 35, 35).'" alt="author">
 							</div>
 							<div style="width:76%;padding-left:5px;" class="notification-event">
 
@@ -274,74 +258,72 @@ class Dashboard extends App {
 							</div>
 						</li>';
 
-			}
-			$id = 1;
-		}
-		else
-		{
-			$id = 0;
-		}
+            }
+            $id = 1;
+        } else {
+            $id = 0;
+        }
 
 
-		$data_json = json_encode(array('id'=>$id,'html'=>$output));
+        $data_json = json_encode(array('id' => $id,'html' => $output));
 
-		echo $data_json;
-	}
+        echo $data_json;
+    }
 
-	function set_add_id(){
+    public function set_add_id()
+    {
 
-		$result = $this->comman_fun->get_table_data('social_post_master',array('status'=>'Active'));
+        $result = $this->comman_fun->get_table_data('social_post_master', array('status' => 'Active'));
 
-		for($i=0;$i<count($result);$i++){
+        for($i = 0;$i < count($result);$i++) {
 
-			$data = array();
+            $data = array();
 
-			if($result[$i]['member_code']!='0'){
+            if($result[$i]['member_code'] != '0') {
 
-				$data['added_by'] = 	$result[$i]['member_code'];
+                $data['added_by'] = 	$result[$i]['member_code'];
 
-			}else{
+            } else {
 
-				$data['added_by'] = 	$result[$i]['gp_addby'];
+                $data['added_by'] = 	$result[$i]['gp_addby'];
 
-			}
+            }
 
-			$this->comman_fun->update($data,'social_post_master',array('post_id'=>$result[$i]['post_id']));
+            $this->comman_fun->update($data, 'social_post_master', array('post_id' => $result[$i]['post_id']));
 
-		}
+        }
 
-	}
+    }
 
 
 
-	//mutual friend list
+    //mutual friend list
 
-	function getMutualFriendsList(int $uid)
-	{
+    public function getMutualFriendsList(int $uid)
+    {
 
-		$result 	= $this->Member_module->mutual_friends($uid);
+        $result 	= $this->Member_module->mutual_friends($uid);
 
-		$member_dt = $this->Member_module->get_member_by_id($uid);
+        $member_dt = $this->Member_module->get_member_by_id($uid);
 
-		$output ='';
+        $output = '';
 
-		$output .= '<div class="mCustomScrollbar" data-mcs-theme="dark">
+        $output .= '<div class="mCustomScrollbar" data-mcs-theme="dark">
 
 					<ul class="notification-list" id="post-likes-members'.$postid.'">';
 
-						$tot_mutual_frnd =0;
+        $tot_mutual_frnd = 0;
 
-						for($i=0;$i<count($result);$i++)
-						{
-							$tot_mutual_frnd =  $i+1;
+        for($i = 0;$i < count($result);$i++) {
+            $tot_mutual_frnd =  $i + 1;
 
-							$member_rs = $this->Member_module->get_member_by_id($result[$i]['friendID']);
+            $member_rs = $this->Member_module->get_member_by_id($result[$i]['friendID']);
 
-							$output .='<li style="padding: 5px 10px !important;">
+            $output .= '<li style="padding: 5px 10px !important;">
 
 								<div class="author-thumb" style="height: 35px;width: 35px;">
 
-									<img src="'.thumb($member_rs['profile_img'],35,35).'" alt="author">
+									<img src="'.thumb($member_rs['profile_img'], 35, 35).'" alt="author">
 
 								</div>
 
@@ -353,12 +335,11 @@ class Dashboard extends App {
 
 							</li>';
 
-						}
-					$output .='</ul>';
+        }
+        $output .= '</ul>';
 
-					if($tot_mutual_frnd>10)
-					{
-						$output .='<div style="text-align:center;margin-top:10px;">
+        if($tot_mutual_frnd > 10) {
+            $output .= '<div style="text-align:center;margin-top:10px;">
 
 							<a style="color:#47a247" id="view_more_mutual_frnds" href="'.file_path('profile/mutual_friends/'.$member_dt['username']).'">
 
@@ -368,24 +349,25 @@ class Dashboard extends App {
 
 						</div>';
 
-					}
+        }
 
 
-					$output .='</div>';
+        $output .= '</div>';
 
 
-		echo $output;
+        echo $output;
 
-	}
+    }
 
 
-	function ads_test(){
+    public function ads_test()
+    {
 
-		$this->Ads_model->getAdsForView();
+        $this->Ads_model->getAdsForView();
 
-		echo $this->db->last_query();
+        echo $this->db->last_query();
 
-	}
+    }
 
 
 

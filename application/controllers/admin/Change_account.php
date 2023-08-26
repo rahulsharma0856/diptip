@@ -1,6 +1,12 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
-class Change_account extends CI_Controller {
-    function __construct() {
+<?php
+
+if (!defined('BASEPATH')) {
+    exit('No direct script access allowed');
+}
+class Change_account extends CI_Controller
+{
+    public function __construct()
+    {
         parent::__construct();
         if (!$this->session->userdata('smr_superadmin')) {
             header('Location: ' . file_path() . 'login');
@@ -8,8 +14,9 @@ class Change_account extends CI_Controller {
         }
         $this->load->model('Member_model');
     }
-	
-    function member($eid) {
+
+    public function member($eid)
+    {
         if ($this->session->userdata('smr_superadmin')) {
             $result = $this->comman_fun->get_table_data('membermaster', array('usercode' => $eid));
             $admin_code = $this->session->userdata['smr_web_login']['usercode'];
@@ -43,8 +50,9 @@ class Change_account extends CI_Controller {
             }
         }
     }
-	
-    function admin() {
+
+    public function admin()
+    {
         if ($this->session->userdata('smr_superadmin')) {
             if ($this->session->userdata['smr_superadmin']['admin_code'] != '') {
                 $uid = $this->session->userdata['smr_superadmin']['admin_code'];
@@ -82,5 +90,5 @@ class Change_account extends CI_Controller {
             }
         }
     }
-	
+
 }

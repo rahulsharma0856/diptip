@@ -1,13 +1,13 @@
 <?php
 
 
-Class Skill_model extends App_model
+class Skill_model extends App_model
 {
-	function getSkill()
+    public function getSkill()
     {
-    
-$string =
-' .NET
+
+        $string =
+        ' .NET
 | 4D
 | Active Directory
 | ADO.NET
@@ -1169,9 +1169,7 @@ $string =
 | Troubleshooting
 | Valuation & Appraisal
 | Weddings' ;
-    
-    	return $string;
+
+        return $string;
     }
 }
-
-?>
