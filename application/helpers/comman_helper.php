@@ -189,6 +189,8 @@ if (! function_exists('filter_tag')) {
     }
 }
 
+// get src file's extension and file name
+
 if (! function_exists('filter_xss')) {
 
     // WARNING: Please avoid using this!!!
@@ -543,8 +545,8 @@ if (! function_exists('thumb')) {
 
     function thumb($fullname = NULL, $width = NULL, $height = NULL)
     {
-
-        // Path to image thumbnail in your root
+        try {  
+            // Path to image thumbnail in your root
         $dir = './upload/post/';
 
         $url = base_url() . 'upload/post/';
@@ -592,7 +594,11 @@ if (! function_exists('thumb')) {
 
             $CI->image_lib->clear();
         }
-        return $image_returned;
+            return $image_returned;
+        }   
+        catch (Exception $e) {  
+            return false;
+        }  
     }
 }
 
