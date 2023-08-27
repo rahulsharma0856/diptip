@@ -10,23 +10,13 @@ class Comment extends App
     {
 
         parent::__construct();
-
         $this->load->library('image_lib');
-
         $this->load->library('upload');
-
         $this->load->model('user/Post_model');
-
         $this->load->model('user/Page_model');
-
         $this->load->model('user/Group_model');
-
         $this->load->model('user/Comment_model');
-
         $this->load->model('user/Notification_module');
-
-
-
         date_default_timezone_set('Asia/Calcutta');
 
     }

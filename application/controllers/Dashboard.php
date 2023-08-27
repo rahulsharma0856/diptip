@@ -34,13 +34,13 @@ class Dashboard extends App
         $limit = 3; //dashboard sidebar item limit
 
         $data['MemberLikedPages'] 	= 	$this->Page_model->getMemberLikedPages(user_session('usercode'), $limit);
-      
+
         if(isset($data['MemberLikedPages'][0])) {
             $likedPage = 'Yes';
         } else {
             $likedPage = 'No';
         }
-  
+
 
         $data['PageSuggestion'] 	= 	$this->Page_model->getPageSuggestion($likedPage);
         $data['SuggestedFriends'] 	= 	$this->Member_module->Suggested_friends(user_session('usercode'));
@@ -77,10 +77,8 @@ class Dashboard extends App
     {
 
         $start_from  	=  isset($_GET['s']) ? $_GET['s'] : 0;
-
-        $result     	=  $this	->	Post_model	->	getMemberHomePost($start_from);
-
-        $ads     		=  $this	->	Ads_model	->	getAdsForView($_GET['ads']);
+        $result     	=  $this->Post_model->getMemberHomePost($start_from);
+        $ads     		=  $this->Ads_model->getAdsForView($_GET['ads']);
 
 
         //echo $this -> db -> last_query();
@@ -106,7 +104,7 @@ class Dashboard extends App
     {
 
         $arr = array();
-
+        $start_from = 0;
         if($_GET['q'] != '') {
 
             $result     	=  $this->Member_module->find_member($start_from);
@@ -114,19 +112,12 @@ class Dashboard extends App
             for($i = 0;$i < count($result);$i++) {
 
                 $arr[] = array(
-
                     'name' => $result[$i]['name'],
-
                     'value' => $result[$i]['username'],
-
                     'image' => thumb($result[$i]['profile_img'], 100, 100),
-
                     'message' => $result[$i]['username'],
-
                     'icon' => '',
-
                     'url' => file_path('profile/view/'.$result[$i]['username'])
-
                 );
             }
 
@@ -172,31 +163,18 @@ class Dashboard extends App
 
     public function post(int $postid)
     {
-
         //$this -> Member_module -> check_paid(user_session('usercode'));
-
         $data = array();
-
         $data['result']   =  $this->Post_model->getPostById($postid);
         //var_dump($data);exit;
         if(isset($data['result'])) {
-
-            $this->load->view('user/home/comman/topheader');
-
-            $this->load->view('user/home/comman/header');
-
-            $this->load->view('user/post/post_single_view', $data);
-
-            $this->load->view('user/home/comman/footer');
-
+            $this->template->data = $data;
+            $this->template->title = 'Login';
+            $this->template->view = 'user/post/post_single_view';
+            $this->load->view('user/layout');
         } else {
-
             $this->load->view('user/not_found');
-
         }
-
-
-
     }
 
     public function getWhoPostLikesMember(int $postid)
@@ -245,7 +223,7 @@ class Dashboard extends App
     public function ajax_load_more_likes(int $postid, $start_from)
     {
         $like_rs = $this->Post_model->getWhoLikesbyPostid($postid, $start_from);
-		$output = "";
+        $output = "";
         if(count($like_rs) > 0) {
             for($i = 0;$i < count($like_rs);$i++) {
                 $output .= '<li style="padding: 5px 10px !important;">

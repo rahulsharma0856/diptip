@@ -10,39 +10,21 @@ class Profile extends App
     {
         parent::__construct();
 
-
-
-
         $this->load->library('image_lib');
-
         $this->load->library('upload');
-
         $this->load->model('Member_module');
-
         $this->load->model('Comman_c_module');
-
         $this->load->model('user/social_media/post_module', '', true);
-
         $this->load->model('user/social_media/Page_module', '', true);
-
         $this->load->model('user/social_media/groups_module', '', true);
-
         $this->load->model('Album_photos_video_model', '', true);
-
         $this->load->model('user/Skill_model', '', true);
-
         $this->load->model('user/Page_model');
-
         $this->load->model('user/Post_model');
-
         $this->load->model('user/Group_model');
-
         $this->load->model('user/Comment_model');
-
         $this->load->model('user/Notification_module');
-
         date_default_timezone_set('Asia/Calcutta');
-
         //$this -> Member_module -> check_paid(user_session('usercode'));
 
     }
@@ -64,13 +46,9 @@ class Profile extends App
     public function is_valid_user($username)
     {
 
-
         $member = $this->Member_module->get_member_by_username($username);
-
         if(!isset($member)) {
-
             header('Location: '.file_path('dashboard/view'));
-
             exit;
         }
 
@@ -81,37 +59,23 @@ class Profile extends App
     public function timeline()
     {
 
-        //$this -> Member_module -> check_paid(user_session('usercode'));
-
         $limit = 3; //dashboard sidebar item limit
-
         $member_user 	 			= 	$this->uri->rsegment(3);
-
         $data['member']				=	$this->Member_module->get_member_by_username($member_user);
-
         $data['paid_sts']			=	$this->Member_module->is_paid(user_session('usercode'));
 
         if(isset($data['member']['usercode'])) {
-
             $data['recent_frnds']		= 	$this->Member_module->get_last_recent_friends_pic($data['member']['usercode']);
-
             $data['MemberLikedPages'] 	= 	$this->Page_model->getMemberLikedPages(user_session('usercode'), $limit);
-
             $data['isMyFriend'] 		= 	$this->Member_module->isMyFriend($data['member']['usercode']);
-
             $data['myGroups'] 			= 	$this->Group_model->getMemberJoinedGroups(user_session('usercode'), $limit);
-
             $data['balance']			=	$this->Member_module->payment_summery_by_wallet(user_session('usercode'), 'USD');
-
             $data['menu_active'] 		= 	'menu-timeline';
 
-            $this->load->view('user/home/comman/topheader');
-
-            $this->load->view('user/home/comman/header');
-
-            $this->load->view('user/profile/timeline', $data);
-
-            $this->load->view('user/home/comman/footer');
+            $this->template->data = $data;
+            $this->template->title = 'Login';
+            $this->template->view = 'user/profile/timeline';
+            $this->load->view('user/layout');
 
 
         } else {
@@ -119,29 +83,19 @@ class Profile extends App
             $this->load->view('user/not_found');
 
         }
-
-
-
-
-
     }
 
     public function about()
     {
 
         $member_user 	 		= 	$this->uri->rsegment(3);
-
         $data['member']			=	$this->Member_module->get_member_by_username($member_user);
-
         $data['menu_active'] 		= 	'menu-about';
 
-        $this->load->view('user/home/comman/topheader');
-
-        $this->load->view('user/home/comman/header');
-
-        $this->load->view('user/profile/about', $data);
-
-        $this->load->view('user/home/comman/footer');
+        $this->template->data = $data;
+        $this->template->title = 'Login';
+        $this->template->view = 'user/profile/about';
+        $this->load->view('user/layout');
 
     }
 
@@ -150,25 +104,17 @@ class Profile extends App
     {
 
         $member_user 	 			= 	$this->uri->rsegment(3);
-
         $data['member']				=	$this->Member_module->get_member_by_username($member_user);
-
         $data['TotalMemberFriend']	=	$this->Member_module->getCountMemberFriend($data['member']['usercode']);
 
         $data['profile_usercode']  	= 	$data['member']['usercode'];
-
         $data['login_usercode']  	= 	user_session('usercode');
-
         $data['menu_active'] 		= 	'menu-friends';
 
-        $this->load->view('user/home/comman/topheader');
-
-        $this->load->view('user/home/comman/header');
-
-        $this->load->view('user/profile/friends', $data);
-
-        $this->load->view('user/home/comman/footer');
-
+        $this->template->data = $data;
+        $this->template->title = 'Login';
+        $this->template->view = 'user/profile/friends';
+        $this->load->view('user/layout');
 
     }
 
@@ -191,13 +137,10 @@ class Profile extends App
         $data['friend']			=	$this->Member_module->getMemberFriend($member['usercode'], $start_from, $search);
 
         echo json_encode(
-            array(
-
+            [
                 'tot'  => count($data['friend']),
-
                 'data' => $this->load->view('user/profile/friends_load', $data, true)
-
-            )
+            ]
         );
 
     }
@@ -207,18 +150,13 @@ class Profile extends App
     {
 
         $data['member']				=	$this->Member_module->get_member_by_username(user_session('username'));
-
         $data['friend']				=	$this->Member_module->getMemberFriendRequest(user_session('usercode'), 50);
-
         $data['TotalMemberFriend']	=	$this->Member_module->getCountMemberFriend($data['member']['usercode']);
 
-        $this->load->view('user/home/comman/topheader');
-
-        $this->load->view('user/home/comman/header');
-
-        $this->load->view('user/profile/friends_request', $data);
-
-        $this->load->view('user/home/comman/footer');
+        $this->template->data = $data;
+        $this->template->title = 'Login';
+        $this->template->view = 'user/profile/friends_request';
+        $this->load->view('user/layout');
 
 
     }
@@ -227,18 +165,13 @@ class Profile extends App
 
     public function edit_profile()
     {
-
         $data['result']	=	$this->Member_module->get_member_by_id(user_session('usercode'));
-
         $data['CountryList']	=	$this->Comman_c_module->getCountryList();
 
-        $this->load->view('user/home/comman/topheader');
-
-        $this->load->view('user/home/comman/header');
-
-        $this->load->view('user/profile/edit_profile', $data);
-
-        $this->load->view('user/home/comman/footer');
+        $this->template->data = $data;
+        $this->template->title = 'Login';
+        $this->template->view = 'user/profile/edit_profile';
+        $this->load->view('user/layout');
 
     }
 
@@ -325,26 +258,16 @@ class Profile extends App
 
     public function photos()
     {
-
         $member_user 	 			= 	$this->uri->rsegment(3);
-
         $data['member']				=	$this->Member_module->get_member_by_username($member_user);
-
         $data['photos']				=	$this->Post_model->getUserPostPhotos($data['member']['usercode']);
-
         $data['tot_photos']			=	$this->Post_model->countTotUserphotos($data['member']['usercode']);
-
         $data['menu_active'] 		= 	'menu-photos';
 
-
-
-        $this->load->view('user/home/comman/topheader');
-
-        $this->load->view('user/home/comman/header');
-
-        $this->load->view('user/profile/photos', $data);
-
-        $this->load->view('user/home/comman/footer');
+        $this->template->data = $data;
+        $this->template->title = 'Login';
+        $this->template->view = 'user/profile/photos';
+        $this->load->view('user/layout');
 
     }
 
@@ -408,21 +331,14 @@ class Profile extends App
 
     public function videos()
     {
-
         $member_user 	 			= 	$this->uri->rsegment(3);
-
         $data['member']				=	$this->Member_module->get_member_by_username($member_user);
-
         $data['menu_active'] 		= 	'menu-videos';
 
-        $this->load->view('user/home/comman/topheader');
-
-        $this->load->view('user/home/comman/header');
-
-        $this->load->view('user/profile/videos', $data);
-
-        $this->load->view('user/home/comman/footer');
-
+        $this->template->data = $data;
+        $this->template->title = 'Login';
+        $this->template->view = 'user/profile/videos';
+        $this->load->view('user/layout');
 
     }
 
@@ -474,14 +390,10 @@ class Profile extends App
 
         $data['member']			=	$this->Member_module->get_member_by_id(user_session('usercode'));
 
-        $this->load->view('user/home/comman/topheader');
-
-        $this->load->view('user/home/comman/header');
-
-        $this->load->view('user/profile/change_profile_image', $data);
-
-        $this->load->view('user/home/comman/footer');
-
+        $this->template->data = $data;
+        $this->template->title = 'Login';
+        $this->template->view = 'user/profile/change_profile_image';
+        $this->load->view('user/layout');
 
     }
 
@@ -980,13 +892,11 @@ class Profile extends App
         $data['skillslist']	= $this->comman_fun->get_table_data('professional_skills_master', array('id>' => '0'));
 
 
-        $this->load->view('user/home/comman/topheader');
 
-        $this->load->view('user/home/comman/header');
-
-        $this->load->view('user/profile/work_experience_view', $data);
-
-        $this->load->view('user/home/comman/footer');
+        $this->template->data = $data;
+        $this->template->title = 'Login';
+        $this->template->view = 'user/profile/work_experience_view';
+        $this->load->view('user/layout');
 
 
     }
@@ -1171,21 +1081,13 @@ class Profile extends App
     public function album()
     {
         $member_user 	 			= 	$this->uri->rsegment(3);
-
         $data['member']				=	$this->Member_module->get_member_by_username($member_user);
-
         $data['album_list']			=	$this->Album_photos_video_model->get_album_by_usercode($data['member']['usercode']);
 
-        $this->load->view('user/home/comman/topheader');
-
-        $this->load->view('user/home/comman/header');
-
-        $this->load->view('user/profile/album_list', $data);
-
-        $this->load->view('user/home/comman/footer');
-
-
-
+        $this->template->data = $data;
+        $this->template->title = 'Login';
+        $this->template->view = 'user/profile/album_list';
+        $this->load->view('user/layout');
     }
 
 
@@ -1193,29 +1095,15 @@ class Profile extends App
     public function photo_album($albumid)
     {
         $data['member']	=	$this->Member_module->get_member_by_id(user_session('usercode'));
-
         $data['photos']	=	$this->Album_photos_video_model->get_album_photos($albumid);
-
-        //var_dump($data['photos']);exit;
-
         $data['albumid'] = 	$albumid;
 
-        $this->load->view('user/home/comman/topheader');
-
-        $this->load->view('user/home/comman/header');
-
-        $this->load->view('user/profile/album_photos', $data);
-
-        $this->load->view('user/home/comman/footer');
-
-
+        $this->template->data = $data;
+        $this->template->title = 'Login';
+        $this->template->view = 'user/profile/album_photos';
+        $this->load->view('user/layout');
 
     }
-
-
-
-
-
 
 
     //Cover Image Submit Event
@@ -1513,36 +1401,18 @@ class Profile extends App
     public function mutual_friends()
     {
         $username 	 			= 	$this->uri->rsegment(3);
-
         $data['member']			=	$this->Member_module->get_member_by_username($username);
-
         $data['friend']			=	$this->Member_module->getMemberFriend($data['member']['usercode']);
-
         $data['TotalMemberFriend']	=	$this->Member_module->getCountMemberFriend($data['member']['usercode']);
-
-
-
         $data['mutualfrnds'] 		= $this->Member_module->mutual_friends($data['member']['usercode']);
-
         $data['TotMutualFrnds'] 	= count($data['mutualfrnds']);
-
         $data['menu_active'] 		= 	'menu-mutualfrnds';
-
-
         $data['profile_usercode']  	= $data['member']['usercode'];
-
         $data['login_usercode']  	= user_session('usercode');
 
-
-        $this->load->view('user/home/comman/topheader');
-
-        $this->load->view('user/home/comman/header');
-
-        $this->load->view('user/profile/mutual_friends', $data);
-
-        $this->load->view('user/home/comman/footer');
+        $this->template->data = $data;
+        $this->template->title = 'Login';
+        $this->template->view = 'user/profile/mutual_friends';
+        $this->load->view('user/layout');
     }
-
-
-
 }
