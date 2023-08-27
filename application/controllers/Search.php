@@ -1,6 +1,6 @@
 <?php
 
-if (! defined('BASEPATH')) {
+if ( ! defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
@@ -9,8 +9,6 @@ class Search extends App
     public function __construct()
     {
         parent::__construct();
-
-
 
         $this->load->model('user/Page_model', '', true);
 
@@ -26,11 +24,10 @@ class Search extends App
 
     }
 
-
     public function top()
     {
 
-        if(isset($_GET['q'])) {
+        if (isset($_GET['q'])) {
 
             $filter = filter_text(urldecode($_GET['q']));
 
@@ -42,8 +39,6 @@ class Search extends App
 
             $data['group'] = $this->filter_group_get($filter, 0, 3);
 
-
-
         }
 
         $this->load->view('user/home/comman/topheader');
@@ -52,7 +47,6 @@ class Search extends App
         $this->load->view('user/home/comman/footer');
 
     }
-
 
     public function people()
     {
@@ -63,11 +57,11 @@ class Search extends App
 
         $data['active_sub_menu'] = 'people';
 
-        $header = array(
+        $header = [
 
-            'serach_form_url' => file_path('search/group')
+            'serach_form_url' => file_path('search/group'),
 
-        );
+        ];
 
         $this->load->view('user/home/comman/topheader');
 
@@ -84,25 +78,23 @@ class Search extends App
 
         $filter = filter_text(utf8_decode(urldecode($_GET['q'])));
 
-        if(isset($_GET['category'])) {
+        if (isset($_GET['category'])) {
 
             $data['category_selected'] = utf8_decode(urldecode($_GET['category']));
 
         }
 
-
-
         $data['filter_text'] = $filter;
 
         $data['active_sub_menu'] = 'page';
 
-        $header = array(
+        $header = [
 
-            'serach_form_url' => file_path('search/page')
+            'serach_form_url' => file_path('search/page'),
 
-        );
+        ];
 
-        $data['category'] 		= 	$this->comman_fun->get_table_data('sm_page_category', array('status' => 'Active'));
+        $data['category'] = $this->comman_fun->get_table_data('sm_page_category', ['status' => 'Active']);
 
         $this->load->view('user/home/comman/topheader');
 
@@ -114,7 +106,6 @@ class Search extends App
 
     }
 
-
     public function group()
     {
 
@@ -124,14 +115,13 @@ class Search extends App
 
         $data['active_sub_menu'] = 'group';
 
-        $header = array(
+        $header = [
 
-            'serach_form_url' => file_path('search/group')
+            'serach_form_url' => file_path('search/group'),
 
-        );
+        ];
 
         $data['category_selected'] = $_GET['category'];
-
 
         $this->load->view('user/home/comman/topheader');
 
@@ -143,83 +133,77 @@ class Search extends App
 
     }
 
-
     public function filter_member_get($filter_by, $start_from = 0, $limit = 3)
     {
 
-        $result     	=  $this->Search_model->find_member($filter_by, $start_from, $limit);
+        $result = $this->Search_model->find_member($filter_by, $start_from, $limit);
 
-        for($i = 0;$i < count($result);$i++) {
+        for ($i = 0; $i < count($result); $i++) {
 
-            $html .= $this->load->view('user/search/friend_html', array('result' => $result[$i]), true);
+            $html .= $this->load->view('user/search/friend_html', ['result' => $result[$i]], true);
 
         }
 
-        return array(
+        return [
 
             'count' => count($result),
 
-            'html' => $html
+            'html'  => $html,
 
-        );
-
+        ];
 
     }
-
 
     public function filter_page_get($filter_by, $start_from = 0, $limit = 3)
     {
 
-        $result     	=  $this->Search_model->filter_page($filter_by, $start_from, $limit);
+        $result = $this->Search_model->filter_page($filter_by, $start_from, $limit);
 
-        for($i = 0;$i < count($result);$i++) {
+        for ($i = 0; $i < count($result); $i++) {
 
-            $html .= $this->load->view('user/search/page_html', array('result' => $result[$i]), true);
+            $html .= $this->load->view('user/search/page_html', ['result' => $result[$i]], true);
 
         }
 
-        return array(
+        return [
 
             'count' => count($result),
 
-            'html' => $html
+            'html'  => $html,
 
-        );
+        ];
 
     }
-
 
     public function filter_group_get($filter_by, $start_from = 0, $limit = 3)
     {
 
-        $result     	=  $this->Search_model->filter_group($filter_by, $start_from, $limit);
+        $result = $this->Search_model->filter_group($filter_by, $start_from, $limit);
 
-        for($i = 0;$i < count($result);$i++) {
+        for ($i = 0; $i < count($result); $i++) {
 
-            $html .= $this->load->view('user/search/group_html', array('result' => $result[$i]), true);
+            $html .= $this->load->view('user/search/group_html', ['result' => $result[$i]], true);
 
         }
 
-        return array(
+        return [
 
             'count' => count($result),
 
-            'html' => $html
+            'html'  => $html,
 
-        );
-
+        ];
 
     }
-
 
     public function load_more_people()
     {
 
         $filter = filter_text((urldecode($_GET['q'])));
 
-        $limit  = (int)utf8_decode(urldecode($_GET['limit']));
+        $limit = (int) utf8_decode(urldecode($_GET['limit']));
 
-        $start  = (int)utf8_decode(urldecode($_GET['start']));
+        $start = (int) utf8_decode(urldecode($_GET['start']));
 
         $result = $this->filter_member_get($filter, $start, $limit);
 
@@ -231,15 +215,14 @@ class Search extends App
 
     }
 
-
     public function load_more_page()
     {
 
         $filter = filter_text(utf8_decode(urldecode($_GET['q'])));
 
-        $limit  = (int)utf8_decode(urldecode($_GET['limit']));
+        $limit = (int) utf8_decode(urldecode($_GET['limit']));
 
-        $start  = (int)utf8_decode(urldecode($_GET['start']));
+        $start = (int) utf8_decode(urldecode($_GET['start']));
 
         $result = $this->filter_page_get($filter, $start, $limit);
 
@@ -251,16 +234,14 @@ class Search extends App
 
     }
 
-
-
     public function load_more_group()
     {
 
         $filter = filter_text(utf8_decode(urldecode($_GET['q'])));
 
-        $limit  = (int)utf8_decode(urldecode($_GET['limit']));
+        $limit = (int) utf8_decode(urldecode($_GET['limit']));
 
-        $start  = (int)utf8_decode(urldecode($_GET['start']));
+        $start = (int) utf8_decode(urldecode($_GET['start']));
 
         $result = $this->filter_group_get($filter, $start, $limit);
 

@@ -1,6 +1,6 @@
 <?php
 
-if (! defined('BASEPATH')) {
+if ( ! defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
@@ -9,8 +9,6 @@ class Upload_img extends App
     public function __construct()
     {
         parent::__construct();
-
-
 
         $this->load->library('image_lib');
 
@@ -38,13 +36,13 @@ class Upload_img extends App
 
             if ($this->form_validation->run() === false) {
 
-                $data = array(
+                $data = [
 
                     'status' => 'false',
 
-                    'msg' => validation_errors()
+                    'msg'    => validation_errors(),
 
-                );
+                ];
 
                 echo json_encode($data);
 
@@ -54,13 +52,13 @@ class Upload_img extends App
 
                 $file_path = $this->_upload_cover_image();
 
-                $data = array(
+                $data = [
 
-                    'status' => 'true',
+                    'status'    => 'true',
 
-                    'file_path' => $file_path
+                    'file_path' => $file_path,
 
-                );
+                ];
 
                 echo json_encode($data);
 
@@ -75,17 +73,17 @@ class Upload_img extends App
     private function _upload_cover_image()
     {
 
-        $result	=	$this->Member_module->get_member_by_id(user_session('usercode'));
+        $result = $this->Member_module->get_member_by_id(user_session('usercode'));
 
-        $data = array(
+        $data = [
 
-            'cover_img' => $_POST['cover_image']
+            'cover_img' => $_POST['cover_image'],
 
-        );
+        ];
 
-        $this->comman_fun->update($data, 'membermaster', array('usercode' => user_session('usercode')));
+        $this->comman_fun->update($data, 'membermaster', ['usercode' => user_session('usercode')]);
 
-        $filename = './upload/post/'.$result['cover_img'];
+        $filename = './upload/post/' . $result['cover_img'];
 
         unlink($filename);
 
@@ -96,7 +94,7 @@ class Upload_img extends App
     public function check_upload_cover_image_size()
     {
 
-        if(isset($_FILES['cover_image']['name'])) {
+        if (isset($_FILES['cover_image']['name'])) {
 
             $image_info = getimagesize($_FILES["cover_image"]["tmp_name"]);
 
@@ -104,7 +102,7 @@ class Upload_img extends App
 
             $image_height = $image_info[1];
 
-            if($image_width > 1368 || $image_height > 402) {
+            if ($image_width > 1368 || $image_height > 402) {
 
                 $this->form_validation->set_message('check_upload_cover_image_size', 'Error Image too Large:  Please Upload Profile Cover Image with Min Size of 1000px by 200px and Max Size of 1368px by 402px.  Recommended: 1268px by 300px');
 
@@ -136,7 +134,7 @@ class Upload_img extends App
 
         $return = $this->upload_image('cover_image', 'member_cover');
 
-        if($return['status'] == true) {
+        if ($return['status'] == true) {
 
             return true;
 
@@ -149,17 +147,6 @@ class Upload_img extends App
         }
 
     }
-
-
-
-
-
-
-
-
-
-
-
 
     //profile Image Submit Event
     public function upload_profile_image()
@@ -175,13 +162,13 @@ class Upload_img extends App
 
             if ($this->form_validation->run() === false) {
 
-                $data = array(
+                $data = [
 
                     'status' => 'false',
 
-                    'msg' => validation_errors()
+                    'msg'    => validation_errors(),
 
-                );
+                ];
 
                 echo json_encode($data);
 
@@ -193,13 +180,13 @@ class Upload_img extends App
 
                 $file_path = $this->_upload_profile_image();
 
-                $data = array(
+                $data = [
 
-                    'status' => 'true',
+                    'status'    => 'true',
 
-                    'file_path' => $file_path
+                    'file_path' => $file_path,
 
-                );
+                ];
 
                 echo json_encode($data);
 
@@ -214,28 +201,27 @@ class Upload_img extends App
     private function _upload_profile_image()
     {
 
-        $result	=	$this->Member_module->get_member_by_id(user_session('usercode'));
+        $result = $this->Member_module->get_member_by_id(user_session('usercode'));
 
+        $data = [
 
-        $data = array(
+            'profile_img' => $_POST['profile_image'],
 
-            'profile_img' => $_POST['profile_image']
+        ];
 
-        );
+        $this->comman_fun->update($data, 'membermaster', ['usercode' => user_session('usercode')]);
 
-        $this->comman_fun->update($data, 'membermaster', array('usercode' => user_session('usercode')));
+        $filename = './upload/post/' . $result['profile_image'];
 
-        $filename = './upload/post/'.$result['profile_image'];
-
-        if($result['profile_img'] != 'profile.png') {
+        if ($result['profile_img'] != 'profile.png') {
 
             unlink($filename);
 
         }
 
-        $session 					= 	$this->session->userdata['smr_web_login'];
+        $session = $this->session->userdata['smr_web_login'];
 
-        $session['profile_img']		=	$_POST['profile_image'];
+        $session['profile_img'] = $_POST['profile_image'];
 
         $this->session->set_userdata('smr_web_login', $session);
 
@@ -246,7 +232,7 @@ class Upload_img extends App
     public function check_upload_profile_image_size()
     {
 
-        if(isset($_FILES['profile_image']['name'])) {
+        if (isset($_FILES['profile_image']['name'])) {
 
             $image_info = getimagesize($_FILES["profile_image"]["tmp_name"]);
 
@@ -286,7 +272,7 @@ class Upload_img extends App
 
         $return = $this->upload_image('profile_image', 'profile_image');
 
-        if($return['status'] == true) {
+        if ($return['status'] == true) {
 
             return true;
 
@@ -300,78 +286,57 @@ class Upload_img extends App
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     //Upload Image
     public function upload_image($file_id, $prefix = null)
     {
 
-        if (isset($_FILES[$file_id]) && !empty($_FILES[$file_id]['name'])) {
+        if (isset($_FILES[$file_id]) && ! empty($_FILES[$file_id]['name'])) {
 
-            $config = array();
+            $config = [];
 
-            $config['upload_path'] 				= 	'./upload/post';
+            $config['upload_path'] = './upload/post';
 
-            $config['allowed_types'] 			= 	'jpg|jpeg|gif|png';
+            $config['allowed_types'] = 'jpg|jpeg|gif|png';
 
-            $config['max_size']      			= 	'1000';
+            $config['max_size'] = '1000';
 
-            $config['max_width']                =   '2000';
-            $config['max_height']               =   '600';
+            $config['max_width']  = '2000';
+            $config['max_height'] = '600';
 
-            $config['min_width']                =   '16';
-            $config['min_height']               =   '16';
+            $config['min_width']  = '16';
+            $config['min_height'] = '16';
 
-            $config['overwrite']     			= 	true;
+            $config['overwrite'] = true;
 
-            $config['remove_spaces'] 			= 	true;
+            $config['remove_spaces'] = true;
 
-            $config['quality'] 					=  '80%';
+            $config['quality'] = '80%';
 
-            $_FILES['userfile']['name'] 		= 	$_FILES[$file_id]['name'];
+            $_FILES['userfile']['name'] = $_FILES[$file_id]['name'];
 
-            $_FILES['userfile']['type'] 		= 	$_FILES[$file_id]['type'];
+            $_FILES['userfile']['type'] = $_FILES[$file_id]['type'];
 
-            $_FILES['userfile']['tmp_name']		= 	$_FILES[$file_id]['tmp_name'];
+            $_FILES['userfile']['tmp_name'] = $_FILES[$file_id]['tmp_name'];
 
-            $_FILES['userfile']['error']		= 	$_FILES[$file_id]['error'];
+            $_FILES['userfile']['error'] = $_FILES[$file_id]['error'];
 
-            $_FILES['userfile']['size']			= 	$_FILES[$file_id]['size'];
+            $_FILES['userfile']['size'] = $_FILES[$file_id]['size'];
 
             // Get temp rand name..
-            $rand = md5(uniqid(rand(), true));
-            $fileName							=	$prefix.'_'.$rand;
-            $fileName 							= 	str_replace(" ", "", $fileName);
-            $config['file_name'] 				= 	$fileName;
+            $rand                = md5(uniqid(rand(), true));
+            $fileName            = $prefix . '_' . $rand;
+            $fileName            = str_replace(" ", "", $fileName);
+            $config['file_name'] = $fileName;
 
             $this->upload->display_errors('', '');
 
             $this->upload->initialize($config);
 
             // Do upload
-            if($this->upload->do_upload()) {
+            if ($this->upload->do_upload()) {
                 $fullPath = $this->upload->data('full_path');
                 $filePath = $this->upload->data('file_path');
-                $fileExt = $this->upload->data('file_ext');
+                $fileExt  = $this->upload->data('file_ext');
 
                 // Get the hash of the file
                 $hashName = substr(hash_file('sha256', $fullPath), 64 - 34, 34);
@@ -382,17 +347,17 @@ class Upload_img extends App
                 // Replace new filename and return upload data
                 $upload_data = str_replace($fileName, $hashName, $this->upload->data());
 
-                $_POST[$file_id]  		= 	$upload_data['file_name'];
+                $_POST[$file_id] = $upload_data['file_name'];
 
-                return array('status' => true);
+                return ['status' => true];
 
             } else {
 
-                return array('status' => false,'msg' => $this->upload->display_errors('', ''));
+                return ['status' => false, 'msg' => $this->upload->display_errors('', '')];
 
             }
         }
-        return array('status' => false,'msg' => 'File Not Selected');
+        return ['status' => false, 'msg' => 'File Not Selected'];
     }
 
 }

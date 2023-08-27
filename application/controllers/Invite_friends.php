@@ -1,6 +1,6 @@
 <?php
 
-if (! defined('BASEPATH')) {
+if ( ! defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
@@ -25,23 +25,21 @@ class Invite_friends extends App
     public function invite($id = null)
     {
 
-        $data['result'] 			= 	$this->comman_fun->get_table_data('social_page_group', array('id' => $id,'status' => 'Active'));
+        $data['result'] = $this->comman_fun->get_table_data('social_page_group', ['id' => $id, 'status' => 'Active']);
 
-        if(isset($data['result'][0])) {
+        if (isset($data['result'][0])) {
 
-            if($data['result'][0]['type'] == 'page') {
+            if ($data['result'][0]['type'] == 'page') {
 
-                $data['title'] = 'Invite your friends to like '.$data['result'][0]['title'];
+                $data['title'] = 'Invite your friends to like ' . $data['result'][0]['title'];
 
             } else {
-                $data['title'] = 'Invite your friends to join '.$data['result'][0]['title'];
+                $data['title'] = 'Invite your friends to join ' . $data['result'][0]['title'];
 
             }
             $this->load->view('user/invite_friends', $data);
 
         }
-
-
 
     }
 
@@ -56,30 +54,29 @@ class Invite_friends extends App
         //echo $this->db->last_query();exit;
         $data = "";
 
-        if($view == 'view1') {
+        if ($view == 'view1') {
 
             $data = $this->HTMLMemberView1($result);
 
         }
 
-        echo json_encode(array(
+        echo json_encode([
 
-            'html' => $data
+            'html' => $data,
 
-        ));
+        ]);
 
         exit;
     }
-
 
     public function HTMLMemberView1($result)
     {
 
         $html = "";
 
-        for($i = 0;$i < count($result);$i++) {
+        for ($i = 0; $i < count($result); $i++) {
 
-            $html .= $this->load->view('user/page/invite_friends_li', array('result' => $result[$i]), true);
+            $html .= $this->load->view('user/page/invite_friends_li', ['result' => $result[$i]], true);
 
         }
 
@@ -87,24 +84,21 @@ class Invite_friends extends App
 
     }
 
-
     public function page_invite()
     {
 
-        if($this->input->server('REQUEST_METHOD') === 'POST') {
+        if ($this->input->server('REQUEST_METHOD') === 'POST') {
 
             $friendId = $_POST['friendId'];
 
-            for($i = 0;$i < count($friendId);$i++) {
+            for ($i = 0; $i < count($friendId); $i++) {
 
                 $this->Notification_module->add_invitation($friendId[$i], $_POST['eid']);
-
 
             }
 
         }
 
     }
-
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-if (! defined('BASEPATH')) {
+if ( ! defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
@@ -16,7 +16,6 @@ class Tag extends App
 
     }
 
-
     public function tag_member_box($tab = null)
     {
         $data['tab'] = $tab;
@@ -27,21 +26,21 @@ class Tag extends App
     {
 
         $filter_by = utf8_decode(urldecode($_GET['term']));
-        $result     	=  $this->Search_model->find_friend($filter_by);
-        $return = array();
-        for($i = 0; $i < count($result); $i++) {
+        $result    = $this->Search_model->find_friend($filter_by);
+        $return    = [];
+        for ($i = 0; $i < count($result); $i++) {
 
             $html = '<li style="padding:10px 15px !important;" class="sec-replace">
-			
-			<div class="author-thumb"> <img src="'.thumb($result[$i]['profile_img'], 100, 100).'" style="width:40px;" alt="author"></div>
-			
-			<div class="notification-event"> <a href="#" id="tag_friend_sel" title="'.$result[$i]['name'].'" uid="'.$result[$i]['usercode'].'"><span class="h6 notification-friend">'.$result[$i]['name'].'</span></a> </div>
-			
+
+			<div class="author-thumb"> <img src="' . thumb($result[$i]['profile_img'], 100, 100) . '" style="width:40px;" alt="author"></div>
+
+			<div class="notification-event"> <a href="#" id="tag_friend_sel" title="' . $result[$i]['name'] . '" uid="' . $result[$i]['usercode'] . '"><span class="h6 notification-friend">' . $result[$i]['name'] . '</span></a> </div>
+
 			</li>';
-            $arr = array(
+            $arr = [
                 'uid'  => $result[$i]['usercode'],
-                'html' => $html
-            );
+                'html' => $html,
+            ];
             $return[] = $arr;
         }
 
@@ -54,11 +53,11 @@ class Tag extends App
     {
 
         $result = $this->Post_model->getPostTaggedMember($post_id, 50);
-        $html = "<ul class='notification-list'>";
-        for($i = 0; $i < count($result); $i++) {
+        $html   = "<ul class='notification-list'>";
+        for ($i = 0; $i < count($result); $i++) {
             $html .= '<li style="padding:10px 15px !important;" class="sec-replace">
-			<div class="author-thumb"> <img src="'.thumb($result[$i]['profile_img'], 100, 100).'" style="width:40px;" alt="author"></div>
-			<div class="notification-event"> <a href="#" id="tag_friend_sel"><span class="h6 notification-friend">'.$result[$i]['name'].'</span></a> </div>
+			<div class="author-thumb"> <img src="' . thumb($result[$i]['profile_img'], 100, 100) . '" style="width:40px;" alt="author"></div>
+			<div class="notification-event"> <a href="#" id="tag_friend_sel"><span class="h6 notification-friend">' . $result[$i]['name'] . '</span></a> </div>
 			</li>';
 
         }

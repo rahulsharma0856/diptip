@@ -22,12 +22,11 @@ class Smileys extends CI_Controller
         $this->load->view('web/smiley_view', $data);
     }
 
-
     public function insert()
     {
         $this->db->simple_query('SET NAMES \'utf8mb4\'');
         $data['post_text'] = $_POST['emoji'];
-        $post_code = $this->comman_fun->addItem($data, 'social_posts');
+        $post_code         = $this->comman_fun->addItem($data, 'social_posts');
     }
 
 }

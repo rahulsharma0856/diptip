@@ -1,6 +1,6 @@
 <?php
 
-if (! defined('BASEPATH')) {
+if ( ! defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
@@ -10,19 +10,16 @@ class Upgrade extends App
     {
         parent::__construct();
 
-
-
         $this->load->model('Member_module', '', true);
 
         date_default_timezone_set('Asia/Calcutta');
-
 
     }
 
     public function index()
     {
 
-        $data['mode'] 			= 	'add' ;
+        $data['mode'] = 'add';
 
         $this->load->view('user/home/comman/topheader');
 
@@ -33,7 +30,5 @@ class Upgrade extends App
         $this->load->view('user/home/comman/footer');
 
     }
-
-
 
 }

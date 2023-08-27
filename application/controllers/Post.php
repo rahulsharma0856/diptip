@@ -1,6 +1,6 @@
 <?php
 
-if (! defined('BASEPATH')) {
+if ( ! defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
@@ -10,8 +10,6 @@ class Post extends App
     {
 
         parent::__construct();
-
-
 
         $this->load->library('image_lib');
 
@@ -31,14 +29,9 @@ class Post extends App
 
         $this->load->model('user/Ads_model');
 
-
-
-
-
         date_default_timezone_set('Asia/Calcutta');
 
     }
-
 
     public function add_post_share_video()
     {
@@ -51,9 +44,9 @@ class Post extends App
 
             if ($this->form_validation->run() === false) {
 
-                $data['text']   =  validation_errors();
+                $data['text'] = validation_errors();
 
-                $data['status'] =  'false';
+                $data['status'] = 'false';
 
                 echo json_encode($data);
 
@@ -63,9 +56,9 @@ class Post extends App
 
                 $result = $this->_add_post_share_video();
 
-                $data['text'] =  $this->load_single_post($result['post_id']);
+                $data['text'] = $this->load_single_post($result['post_id']);
 
-                $data['status'] =  'true';
+                $data['status'] = 'true';
 
                 echo json_encode($data);
 
@@ -77,24 +70,22 @@ class Post extends App
 
     }
 
-
-
     private function _add_post_share_video()
     {
 
         $video_share = "";
 
-        $data = array(
+        $data = [
 
             'post_category' => $this->input->post('type'),
 
-            'post_text' => $this->input->post('post_text2'),
+            'post_text'     => $this->input->post('post_text2'),
 
-            'post_type' => 'add',
+            'post_type'     => 'add',
 
-        );
+        ];
 
-        if(preg_match('/youtube.com|youtu.be|vimeo.com/', $_POST['video_share'])) {
+        if (preg_match('/youtube.com|youtu.be|vimeo.com/', $_POST['video_share'])) {
 
             $data['video_share'] = $this->input->post('video_share');
 
@@ -102,45 +93,41 @@ class Post extends App
 
             $item_path = $this->get_url_info($this->input->post('video_share'));
 
-            $data['share_url'] 		= 	$this->input->post('video_share');
+            $data['share_url'] = $this->input->post('video_share');
 
-            $data['share_url_info'] = 	json_encode($item_path);
+            $data['share_url_info'] = json_encode($item_path);
 
         }
 
-        if($_POST['type'] == 'member') {
+        if ($_POST['type'] == 'member') {
 
             $data['member_code'] = user_session('usercode');
 
-        } elseif($_POST['type'] == 'page') {
+        } elseif ($_POST['type'] == 'page') {
 
             $data['gp_addby'] = user_session('usercode');
 
             $data['group_page_id'] = $this->input->post('endcode');
 
-        } elseif($_POST['type'] == 'group') {
+        } elseif ($_POST['type'] == 'group') {
 
-            $data['gp_addby'] 		= 	user_session('usercode');
+            $data['gp_addby'] = user_session('usercode');
 
-            $data['group_page_id']  = 	$this->input->post('endcode');
+            $data['group_page_id'] = $this->input->post('endcode');
 
+        } elseif ($_POST['type'] == 'tag') {
 
-        } elseif($_POST['type'] == 'tag') {
+            $data['member_code'] = $this->input->post('endcode');
 
-            $data['member_code'] 		= 	$this->input->post('endcode');
-
-            $data['gp_addby']  			= 	user_session('usercode');
+            $data['gp_addby'] = user_session('usercode');
 
         }
 
-        $result =  $this->Post_model->add_post($data);
-
-
+        $result = $this->Post_model->add_post($data);
 
         return $result;
 
     }
-
 
     public function check_valid_rss()
     {
@@ -152,9 +139,9 @@ class Post extends App
     public function check_valid_post()
     {
 
-        $type = array('member','page','group','tag');
+        $type = ['member', 'page', 'group', 'tag'];
 
-        if(!in_array($_POST['type'], $type)) {
+        if ( ! in_array($_POST['type'], $type)) {
 
             $this->form_validation->set_message('check_valid_post', 'Invaild Request');
 
@@ -162,10 +149,9 @@ class Post extends App
 
         }
 
+        if ($_POST['type'] == 'page') {
 
-        if($_POST['type'] == 'page') {
-
-            if(!$this->Page_model->isAdmin($_POST['endcode'])) {
+            if ( ! $this->Page_model->isAdmin($_POST['endcode'])) {
 
                 $this->form_validation->set_message('check_valid_post', 'Invaild Request');
 
@@ -178,18 +164,17 @@ class Post extends App
             }
 
         }
-        if($_POST['type'] == 'group') {
+        if ($_POST['type'] == 'group') {
 
-            $result			= 	$this->Group_model->getGroupById($_POST['endcode']);
+            $result = $this->Group_model->getGroupById($_POST['endcode']);
 
-            $isGroupAdmin 	= 	$this->Group_model->isAdmin($_POST['endcode']);
+            $isGroupAdmin = $this->Group_model->isAdmin($_POST['endcode']);
 
-            $isGroupJoined	= 	$this->Group_model->isGroupJoined($_POST['endcode']);
+            $isGroupJoined = $this->Group_model->isGroupJoined($_POST['endcode']);
 
+            if ($result[0]['group_posts'] == 'Admin') {
 
-            if($result[0]['group_posts'] == 'Admin') {
-
-                if($isGroupAdmin == true) {
+                if ($isGroupAdmin == true) {
 
                     return true;
 
@@ -197,9 +182,9 @@ class Post extends App
 
             }
 
-            if($result[0]['group_posts'] == 'Any') {
+            if ($result[0]['group_posts'] == 'Any') {
 
-                if($isGroupJoined == true || $isGroupAdmin == true) {
+                if ($isGroupJoined == true || $isGroupAdmin == true) {
 
                     return true;
 
@@ -213,9 +198,9 @@ class Post extends App
 
         }
 
-        if($_POST['type'] == 'tag') {
+        if ($_POST['type'] == 'tag') {
 
-            if($this->Member_module->isMyFriend($_POST['endcode'])) {
+            if ($this->Member_module->isMyFriend($_POST['endcode'])) {
 
                 return true;
 
@@ -233,7 +218,7 @@ class Post extends App
     public function check_post_share_video()
     {
 
-        if($_POST['post_text2'] == '' && $_POST['video_share'] == '') {
+        if ($_POST['post_text2'] == '' && $_POST['video_share'] == '') {
 
             $this->form_validation->set_message('check_post_share_video', 'Invaild Request');
 
@@ -243,7 +228,6 @@ class Post extends App
 
         return true;
     }
-
 
     public function add_post_status()
     {
@@ -255,7 +239,7 @@ class Post extends App
             $this->form_validation->set_rules('post_text', 'Text', 'callback_check_post_status');
 
             // Upload Video
-            if($_FILES['uploadStatusVideo']['name'] != '') {
+            if ($_FILES['uploadStatusVideo']['name'] != '') {
 
                 $this->form_validation->set_rules('uploadStatusVideo', 'Video', 'callback_upload_video');
 
@@ -263,9 +247,9 @@ class Post extends App
 
             if ($this->form_validation->run() === false) {
 
-                $data['text']   =  validation_errors();
+                $data['text'] = validation_errors();
 
-                $data['status'] =  'false';
+                $data['status'] = 'false';
 
                 echo json_encode($data);
 
@@ -277,18 +261,18 @@ class Post extends App
 
                 // Validate Image Check..
                 if ($result[0]['notification'] != '') {
-                    $data['text']   =  validation_errors();
+                    $data['text'] = validation_errors();
 
-                    $data['status'] =  'false';
+                    $data['status'] = 'false';
 
                     echo json_encode($data);
 
                     exit;
                 }
 
-                $data['text'] =  $this->load_single_post($result['post_id'], $_POST['type']);
+                $data['text'] = $this->load_single_post($result['post_id'], $_POST['type']);
 
-                $data['status'] =  'true';
+                $data['status'] = 'true';
 
                 echo json_encode($data);
 
@@ -304,63 +288,63 @@ class Post extends App
 
         $post_text = $this->input->post('post_text');
 
-        $data = array(
+        $data = [
 
             'post_category' => $this->input->post('type'),
 
-            'post_text' => $post_text,
+            'post_text'     => $post_text,
 
-            'post_type' => 'add',
+            'post_type'     => 'add',
 
-        );
+        ];
 
-        if($_POST['type'] == 'member') {
+        if ($_POST['type'] == 'member') {
 
-            $data['member_code'] 	= user_session('usercode');
+            $data['member_code'] = user_session('usercode');
 
-        } elseif($_POST['type'] == 'page') {
+        } elseif ($_POST['type'] == 'page') {
 
-            $data['gp_addby'] 		= user_session('usercode');
+            $data['gp_addby'] = user_session('usercode');
 
             $data['group_page_id'] = $this->input->post('endcode');
 
-        } elseif($_POST['type'] == 'group') {
+        } elseif ($_POST['type'] == 'group') {
 
-            $data['gp_addby'] 		= 	user_session('usercode');
+            $data['gp_addby'] = user_session('usercode');
 
-            $data['group_page_id']  = 	$this->input->post('endcode');
+            $data['group_page_id'] = $this->input->post('endcode');
 
-        } elseif($_POST['type'] == 'tag') {
+        } elseif ($_POST['type'] == 'tag') {
 
-            $data['member_code'] 		= 	$this->input->post('endcode');
+            $data['member_code'] = $this->input->post('endcode');
 
-            $data['gp_addby']  			= 	user_session('usercode');
+            $data['gp_addby'] = user_session('usercode');
 
         }
 
         // Upload Video Prep
-        if($_FILES['uploadStatusVideo']['name'] != '') {
+        if ($_FILES['uploadStatusVideo']['name'] != '') {
 
             $data['video_upload'] = $this->input->post('uploadVideo');
 
         }
 
-        $result = array();
+        $result                    = [];
         $result[0]['notification'] = '';
 
         // Upload Image and Check
-        if(count($_FILES['uploadStatusImg']['name']) > 0) {
+        if (count($_FILES['uploadStatusImg']['name']) > 0) {
             // Upload the image
             $upload_data = $this->upload_image();
 
-            $count = count($upload_data);
+            $count    = count($upload_data);
             $validImg = true;
 
             // Check for returned errors..
-            for ($i = 0; $i < $count; $i ++) {
+            for ($i = 0; $i < $count; $i++) {
                 if ($upload_data[$i]['notification'] != '') {
                     $result[$i]['notification'] = $upload_data[$i]['notification'];
-                    $validImg = false;
+                    $validImg                   = false;
                 }
             }
             // Return here if not valid image.
@@ -370,22 +354,22 @@ class Post extends App
         }
 
         // Add Post
-        $result =  $this->Post_model->add_post($data);
+        $result = $this->Post_model->add_post($data);
 
         // Post Image
-        if(count($_FILES['uploadStatusImg']['name']) > 0) {
+        if (count($_FILES['uploadStatusImg']['name']) > 0) {
 
             $count = count($upload_data);
 
-            for ($i = 0; $i < $count; $i ++) {
+            for ($i = 0; $i < $count; $i++) {
                 if ($upload_data[$i]['notification'] != '') {
                     $result[$i]['notification'] = $upload_data[$i]['notification'];
                     continue;
                 }
-                $data = array(
-                    'post_code' => $result['post_code'],
-                    'image_path' => $upload_data[$i]['file_name']
-                );
+                $data = [
+                    'post_code'  => $result['post_code'],
+                    'image_path' => $upload_data[$i]['file_name'],
+                ];
                 $this->Post_model->add_post_image($data);
             }
 
@@ -395,20 +379,18 @@ class Post extends App
         return $result;
     }
 
-
     public function upload_video()
     {
 
-        $config = array();
+        $config = [];
 
-        $config['upload_path'] 	 = 	'./upload/video';
+        $config['upload_path'] = './upload/video';
 
         //$config['allowed_types'] = 'mp4|ogv|avi|mkv';
 
         $ex_type = explode('/', $_FILES['uploadStatusVideo']['type']);
 
-
-        if($ex_type[0] != 'video') {
+        if ($ex_type[0] != 'video') {
 
             $this->form_validation->set_message('upload_video', 'Invalid File Upload');
 
@@ -418,34 +400,33 @@ class Post extends App
 
         $config['allowed_types'] = '*';
 
-        $config['max_size']      = '30720';
+        $config['max_size'] = '30720';
 
-        $config['overwrite']     = false;
+        $config['overwrite'] = false;
 
-        $_FILES['userfile']['name'] 		= 	$_FILES['uploadStatusVideo']['name'];
+        $_FILES['userfile']['name'] = $_FILES['uploadStatusVideo']['name'];
 
-        $_FILES['userfile']['type'] 		= 	$_FILES['uploadStatusVideo']['type'];
+        $_FILES['userfile']['type'] = $_FILES['uploadStatusVideo']['type'];
 
-        $_FILES['userfile']['tmp_name']		= 	$_FILES['uploadStatusVideo']['tmp_name'];
+        $_FILES['userfile']['tmp_name'] = $_FILES['uploadStatusVideo']['tmp_name'];
 
-        $_FILES['userfile']['error']		= 	$_FILES['uploadStatusVideo']['error'];
+        $_FILES['userfile']['error'] = $_FILES['uploadStatusVideo']['error'];
 
-        $_FILES['userfile']['size']			= 	$_FILES['uploadStatusVideo']['size'];
-
+        $_FILES['userfile']['size'] = $_FILES['uploadStatusVideo']['size'];
 
         $rand = md5(uniqid(rand(), true));
 
-        $fileName							=	user_session('usercode').'_'.$rand;
+        $fileName = user_session('usercode') . '_' . $rand;
 
-        $fileName 							= 	str_replace(" ", "", $fileName);
+        $fileName = str_replace(" ", "", $fileName);
 
-        $config['file_name'] 				= 	$fileName;
+        $config['file_name'] = $fileName;
 
         $this->upload->initialize($config);
 
-        if($this->upload->do_upload()) {
+        if ($this->upload->do_upload()) {
 
-            $upload_data    	= $this->upload->data();
+            $upload_data = $this->upload->data();
 
             $_POST['uploadVideo'] = $upload_data['file_name'];
 
@@ -466,19 +447,19 @@ class Post extends App
 
         $files = $_FILES;
 
-        $config = array();
+        $config = [];
 
         $config['upload_path'] = './upload/post/';
 
         $config['allowed_types'] = 'gif|jpg|png|jpeg';
 
-        $config['max_size'] = '2000';
+        $config['max_size']     = '2000';
         $config['max_filename'] = '128';
 
-        $config['max_width'] = '2000';
+        $config['max_width']  = '2000';
         $config['max_height'] = '1600';
 
-        $config['min_width'] = '32';
+        $config['min_width']  = '32';
         $config['min_height'] = '32';
 
         $config['overwrite'] = true;
@@ -487,9 +468,9 @@ class Post extends App
 
         $this->upload->display_errors('', '');
 
-        $upload_data = array();
+        $upload_data = [];
 
-        for ($i = 0; $i < $cpt; $i ++) {
+        for ($i = 0; $i < $cpt; $i++) {
 
             if ($files['uploadStatusImg']['name'][$i]) {
 
@@ -504,9 +485,9 @@ class Post extends App
                 $_FILES['userfile']['size'] = $files['uploadStatusImg']['size'][$i];
 
                 // Get temp rand name..
-                $rand = md5(uniqid(rand(), true));
-                $fileName = user_session('usercode') . '_' . $rand;
-                $fileName = str_replace(" ", "", $fileName);
+                $rand                = md5(uniqid(rand(), true));
+                $fileName            = user_session('usercode') . '_' . $rand;
+                $fileName            = str_replace(" ", "", $fileName);
                 $config['file_name'] = $fileName;
 
                 $this->upload->initialize($config);
@@ -517,7 +498,7 @@ class Post extends App
                 if ($this->upload->do_upload()) {
                     $fullPath = $this->upload->data('full_path');
                     $filePath = $this->upload->data('file_path');
-                    $fileExt = $this->upload->data('file_ext');
+                    $fileExt  = $this->upload->data('file_ext');
 
                     // Get the hash of the file
                     $hashName = substr(hash_file('sha256', $fullPath), 64 - 34, 34);
@@ -540,11 +521,10 @@ class Post extends App
         return $upload_data;
     }
 
-
     public function check_post_status()
     {
 
-        if($_POST['post_text'] == '' && !isset($_FILES['uploadStatusImg']['name'][0])) {
+        if ($_POST['post_text'] == '' && ! isset($_FILES['uploadStatusImg']['name'][0])) {
 
             $this->form_validation->set_message('check_post_status', 'Invalid Request');
 
@@ -554,8 +534,6 @@ class Post extends App
 
         return true;
     }
-
-
 
     public function load_single_post($id, $section = 'member', $inner = '0')
     {
@@ -570,7 +548,6 @@ class Post extends App
 
     }
 
-
     public function test()
     {
 
@@ -578,18 +555,16 @@ class Post extends App
 
     }
 
-
     public function do_like_post($post_id)
     {
 
         $result = $this->Post_model->do_like_post($post_id);
 
-        $data = array(
+        $data = [
 
-         'html' => $this->PostLikesHtml($post_id)
+            'html' => $this->PostLikesHtml($post_id),
 
-        );
-
+        ];
 
         echo json_encode($data);
 
@@ -597,17 +572,16 @@ class Post extends App
 
     }
 
-
     public function do_unlike_post($post_id)
     {
 
         $result = $this->Post_model->do_unlike_post($post_id);
 
-        $data = array(
+        $data = [
 
-         'html' => $this->PostLikesHtml($post_id)
+            'html' => $this->PostLikesHtml($post_id),
 
-        );
+        ];
 
         echo json_encode($data);
 
@@ -626,20 +600,20 @@ class Post extends App
             $post_like = 'Likes';
         }
 
-        if($this->Post_model->isMemberLikePost($post_id)) {
+        if ($this->Post_model->isMemberLikePost($post_id)) {
 
-            $html = '<span><a href="#" class="post-add-icon inline-items" id="do_unlike_post" value="'.$post_id.'"><i class="fa fa-heart"></i> </a></span>
-			
-					 <span><a style="color:#888da8;" href="'.file_path('dashboard/getWhoPostLikesMember/'.$post_id).'" class="who-likes-popover like-post-'.$post_id.'" id="who-likes-popover">'.$totalLikes.' '.$post_like.'</a>
-					 
+            $html = '<span><a href="#" class="post-add-icon inline-items" id="do_unlike_post" value="' . $post_id . '"><i class="fa fa-heart"></i> </a></span>
+
+					 <span><a style="color:#888da8;" href="' . file_path('dashboard/getWhoPostLikesMember/' . $post_id) . '" class="who-likes-popover like-post-' . $post_id . '" id="who-likes-popover">' . $totalLikes . ' ' . $post_like . '</a>
+
 					 </span>';
 
         } else {
 
-            $html = '<span><a href="#" class="post-add-icon inline-items" id="do_like_post" value="'.$post_id.'"> <i class="fa fa-heart-o"></i></a></span> 
-			
-					 <span><a style="color:#888da8;" href="'.file_path('dashboard/getWhoPostLikesMember/'.$post_id).'" class="who-likes-popover like-post-'.$post_id.'" id="who-likes-popover"> '.$totalLikes.' '.$post_like.'</a>
-					 
+            $html = '<span><a href="#" class="post-add-icon inline-items" id="do_like_post" value="' . $post_id . '"> <i class="fa fa-heart-o"></i></a></span>
+
+					 <span><a style="color:#888da8;" href="' . file_path('dashboard/getWhoPostLikesMember/' . $post_id) . '" class="who-likes-popover like-post-' . $post_id . '" id="who-likes-popover"> ' . $totalLikes . ' ' . $post_like . '</a>
+
 					 </span>';
 
         }
@@ -648,79 +622,73 @@ class Post extends App
 
     }
 
-
-
     public function share_popup($post_id = null, $section = 'member')
     {
 
-        $balance	=	$this->Member_module->payment_summery_by_wallet(user_session('usercode'), 'USD');
+        $balance = $this->Member_module->payment_summery_by_wallet(user_session('usercode'), 'USD');
 
         $detail = $this->Post_model->get_post($post_id);
 
         $result = $this->Post_model->getMasterPostByPostcode($detail[0]['post_code']);
 
-        $data = array(
+        $data = [
 
-            'detail' => $detail[0],
+            'detail'  => $detail[0],
 
-            'result' => $result,
+            'result'  => $result,
 
-            'section' => $section
+            'section' => $section,
 
-        );
+        ];
 
-        if(!$this->check_rss_valid()) {
+        if ( ! $this->check_rss_valid()) {
 
-            $this->load->view('user/load/popup_msg', array('msg' => 'Sorry! you do not have enough USD Credits in your Account to Share this Post.'));
+            $this->load->view('user/load/popup_msg', ['msg' => 'Sorry! you do not have enough USD Credits in your Account to Share this Post.']);
 
-        } elseif($section == 'page') {
+        } elseif ($section == 'page') {
 
-            $data['pages'] 	= 	$this->Page_model->getMyPages();
+            $data['pages'] = $this->Page_model->getMyPages();
 
-            if(count($data['pages']) > 0) {
-
-                $this->load->view('user/load/share_popup_file', $data);
-
-            } else {
-
-                $this->load->view('user/load/popup_msg', array('msg' => 'You have no any page to post share'));
-            }
-
-        } elseif($section == 'group') {
-
-            $groups 			= 	$this->Group_model->getJoinedGroupListForPost();
-
-            $mygroup			= 	$this->Group_model->getMyGroup();
-
-            $data['groups']    =  array_merge($groups, $mygroup);
-
-            if(count($data['groups']) > 0) {
+            if (count($data['pages']) > 0) {
 
                 $this->load->view('user/load/share_popup_file', $data);
 
             } else {
 
-                $this->load->view('user/load/popup_msg', array('msg' => 'You have no any group to post share'));
+                $this->load->view('user/load/popup_msg', ['msg' => 'You have no any page to post share']);
+            }
+
+        } elseif ($section == 'group') {
+
+            $groups = $this->Group_model->getJoinedGroupListForPost();
+
+            $mygroup = $this->Group_model->getMyGroup();
+
+            $data['groups'] = array_merge($groups, $mygroup);
+
+            if (count($data['groups']) > 0) {
+
+                $this->load->view('user/load/share_popup_file', $data);
+
+            } else {
+
+                $this->load->view('user/load/popup_msg', ['msg' => 'You have no any group to post share']);
 
             }
 
-        } elseif($section == 'member') {
+        } elseif ($section == 'member') {
 
             $this->load->view('user/load/share_popup_file', $data);
 
         }
 
-
     }
-
 
     public function check_rss_valid()
     {
 
         return true;
     }
-
-
 
     public function post_share_submit()
     {
@@ -731,12 +699,11 @@ class Post extends App
 
             $this->form_validation->set_rules('post_id', 'Post Id', 'callback_check_valid_rss');
 
-
             if ($this->form_validation->run() === false) {
 
-                $data['text']   =  validation_errors();
+                $data['text'] = validation_errors();
 
-                $data['status'] =  'false';
+                $data['status'] = 'false';
 
                 echo json_encode($data);
 
@@ -746,7 +713,7 @@ class Post extends App
 
                 $result = $this->_post_share_submit();
 
-                $data['status'] =  'true';
+                $data['status'] = 'true';
 
                 echo json_encode($data);
 
@@ -757,25 +724,22 @@ class Post extends App
         }
     }
 
-
     private function _post_share_submit()
     {
 
-        $data = array(
+        $data = [
 
             'post_category' => $_POST['type'],
 
-            'pg_code' 		=> $_POST['endcode'],
+            'pg_code'       => $_POST['endcode'],
 
-            'share_txt' 	=> $this->input->post('share_txt'),
+            'share_txt'     => $this->input->post('share_txt'),
 
-            'post_id' 		=> $_POST['post_id']
+            'post_id'       => $_POST['post_id'],
 
-        );
+        ];
 
         $post_id = $this->Post_model->share_post($data);
-
-
 
         $this->isShareAds($_POST['post_id']);
 
@@ -786,37 +750,37 @@ class Post extends App
 
         $detail = $this->Post_model->get_post($post_id);
 
-        if($detail[0]['post_category'] == 'Ads' && $detail[0]['is_ads'] == '1') {
+        if ($detail[0]['post_category'] == 'Ads' && $detail[0]['is_ads'] == '1') {
 
             $totAdsShare = $this->Ads_model->totAdsShare($detail[0]['ads_code'], $post_id);
 
-            $result = $this -> Ads_model -> getAdById($detail[0]['ads_code']);
+            $result = $this->Ads_model->getAdById($detail[0]['ads_code']);
 
-            $is_paid = $this -> Member_module -> is_paid(user_session('usercode'));
+            $is_paid = $this->Member_module->is_paid(user_session('usercode'));
 
-            if($totAdsShare == 1 && (int)$result[0]['tot_share'] > (int)$result[0]['get_share'] && $is_paid == true) {
+            if ($totAdsShare == 1 && (int) $result[0]['tot_share'] > (int) $result[0]['get_share'] && $is_paid == true) {
 
-                $data = array(
+                $data = [
 
-                    'usercode' 		=> user_session('usercode'),
+                    'usercode'    => user_session('usercode'),
 
-                    'ads_code' 		=> $detail[0]['ads_code'],
+                    'ads_code'    => $detail[0]['ads_code'],
 
-                    'amount' 		=>  0.10,
+                    'amount'      => 0.10,
 
-                    'wallet_type' 	=> 'ads_share',
+                    'wallet_type' => 'ads_share',
 
-                    'wallet' 		=> 'USD',
+                    'wallet'      => 'USD',
 
-                    'type_dt' 		=> 'Share_Ads',
+                    'type_dt'     => 'Share_Ads',
 
-                    'time_dt' 		=> time()
+                    'time_dt'     => time(),
 
-                );
+                ];
 
                 $this->comman_fun->addItem($data, 'm_income');
 
-                $this -> Ads_model -> updateShares($detail[0]['ads_code']);
+                $this->Ads_model->updateShares($detail[0]['ads_code']);
 
             }
 
@@ -827,9 +791,9 @@ class Post extends App
     public function delete_post($id = null)
     {
 
-        if($this->Post_model->delete_post($id)) {
+        if ($this->Post_model->delete_post($id)) {
 
-            $data['status'] =  'true';
+            $data['status'] = 'true';
 
             echo json_encode($data);
 
@@ -837,7 +801,7 @@ class Post extends App
 
         } else {
 
-            $data['status'] =  'false';
+            $data['status'] = 'false';
 
             echo json_encode($data);
 
@@ -846,14 +810,13 @@ class Post extends App
         }
 
     }
-
 
     public function change_privacy($privacy, $id = null)
     {
 
-        if($this->Post_model->change_privacy($privacy, $id)) {
+        if ($this->Post_model->change_privacy($privacy, $id)) {
 
-            $data['status'] =  'true';
+            $data['status'] = 'true';
 
             echo json_encode($data);
 
@@ -861,7 +824,7 @@ class Post extends App
 
         } else {
 
-            $data['status'] =  'false';
+            $data['status'] = 'false';
 
             echo json_encode($data);
 
@@ -871,12 +834,10 @@ class Post extends App
 
     }
 
-
-
     public function edit_post(int $post_id)
     {
 
-        $data = array();
+        $data = [];
 
         $data['detail'] = $this->Post_model->get_post($post_id);
 
@@ -893,19 +854,19 @@ class Post extends App
     public function postImageDelete(int $imgID)
     {
 
-        $result = $this->comman_fun->get_table_data('social_post_images', array('id' => $imgID));
+        $result = $this->comman_fun->get_table_data('social_post_images', ['id' => $imgID]);
 
-        $post = $this->comman_fun->get_table_data('social_posts', array('id' => $result[0]['post_code'],'add_by' => user_session('usercode')));
+        $post = $this->comman_fun->get_table_data('social_posts', ['id' => $result[0]['post_code'], 'add_by' => user_session('usercode')]);
 
-        if(isset($post[0])) {
+        if (isset($post[0])) {
 
-            $data = array(
+            $data = [
 
-                'status' => '0'
+                'status' => '0',
 
-            );
+            ];
 
-            $this->comman_fun->update($data, 'social_post_images', array('id' => $imgID));
+            $this->comman_fun->update($data, 'social_post_images', ['id' => $imgID]);
 
         }
 
@@ -916,16 +877,16 @@ class Post extends App
 
         if ($this->input->server('REQUEST_METHOD') === 'POST') {
             $this->form_validation->set_rules('type', 'Post Type', 'callback_check_valid_edit_post');
-            if($_FILES['uploadStatusVideo']['name'] != '') {
+            if ($_FILES['uploadStatusVideo']['name'] != '') {
                 $this->form_validation->set_rules('uploadStatusVideo', 'Video', 'callback_upload_video');
             }
 
-            $data = array();
+            $data = [];
             if ($this->form_validation->run() === false) {
 
-                $data['text']   =  validation_errors();
+                $data['text'] = validation_errors();
 
-                $data['status'] =  'false';
+                $data['status'] = 'false';
 
                 echo json_encode($data);
 
@@ -935,11 +896,11 @@ class Post extends App
 
                 $this->_post_edit_submit();
 
-                $data['text'] 	=  $this->load_single_post($_POST['post_id'], 'member', 'only_inner');
+                $data['text'] = $this->load_single_post($_POST['post_id'], 'member', 'only_inner');
 
-                $data['divID'] 	=  'post'.$_POST['post_id'];
+                $data['divID'] = 'post' . $_POST['post_id'];
 
-                $data['status'] =  'true';
+                $data['status'] = 'true';
 
                 echo json_encode($data);
 
@@ -957,25 +918,25 @@ class Post extends App
 
         //$master = $this->Post_model->get_post_master($detail[0]['post_code']);
 
-        if($detail[0]['post_type'] == 'add') {
+        if ($detail[0]['post_type'] == 'add') {
 
-            if(count($_FILES['uploadStatusImg']['name']) > 0) {
+            if (count($_FILES['uploadStatusImg']['name']) > 0) {
 
-                $result =  array(
+                $result = [
 
                     'post_code' => $detail[0]['post_code'],
 
-                    'post_id'  => $_POST['post_id'],
+                    'post_id'   => $_POST['post_id'],
 
-                );
+                ];
 
                 $this->upload_image($result);
 
             }
 
-            $data = array();
+            $data = [];
 
-            if($_FILES['uploadStatusVideo']['name'] != "" && $_POST['uploadVideo'] != "") {
+            if ($_FILES['uploadStatusVideo']['name'] != "" && $_POST['uploadVideo'] != "") {
 
                 $data['video_upload'] = $_POST['uploadVideo'];
 
@@ -983,58 +944,57 @@ class Post extends App
 
             } else {
 
-                if($_POST['video_share'] != "") {
+                if ($_POST['video_share'] != "") {
 
                     $data['video_share'] = $_POST['video_share'];
 
                 }
             }
 
-            $data['post_text'] =  $_POST['post_text_r'];
+            $data['post_text'] = $_POST['post_text_r'];
 
-            $this->comman_fun->update($data, 'social_posts', array('id' => $detail[0]['post_code']));
+            $this->comman_fun->update($data, 'social_posts', ['id' => $detail[0]['post_code']]);
 
         } else {
 
-            $data = array();
+            $data = [];
 
             $data['share_txt'] = $_POST['post_text_r'];
 
-            $this->comman_fun->update($data, 'social_post_master', array('post_id' => $detail[0]['post_id']));
+            $this->comman_fun->update($data, 'social_post_master', ['post_id' => $detail[0]['post_id']]);
 
         }
 
-        $tag_members 		  = $_POST['tagFriend'];
+        $tag_members = $_POST['tagFriend'];
 
         $tag_members_usercode = $_POST['tagFriendUsercode'];
 
+        if (isset($tag_members[0])) {
 
-        if(isset($tag_members[0])) {
+            $this->comman_fun->delete('social_post_member', ['post_id' => $_POST['post_id']]);
 
-            $this->comman_fun->delete('social_post_member', array('post_id' => $_POST['post_id']));
+            for ($i = 0; $i < count($tag_members); $i++) {
+                $tag_data = [
 
-            for($i = 0;$i < count($tag_members);$i++) {
-                $tag_data = array(
+                    'usercode' => $tag_members_usercode[$i],
 
-                    'usercode' 		=> $tag_members_usercode[$i],
+                    'post_id'  => $_POST['post_id'],
 
-                    'post_id' 		=> $_POST['post_id'],
+                    'type'     => 'tag_friend',
 
-                    'type' 			=> 'tag_friend',
+                    'status'   => 'Active',
 
-                    'status' 		=> 'Active'
-
-                );
+                ];
 
                 $this->comman_fun->addItem($tag_data, 'social_post_member');
             }
 
         } else {
-            $checkTagMember 	  =	$this->Post_model->getPostTaggedMember($_POST['post_id'], 50);
+            $checkTagMember = $this->Post_model->getPostTaggedMember($_POST['post_id'], 50);
 
-            if(isset($checkTagMember[0])) {
+            if (isset($checkTagMember[0])) {
 
-                $this->comman_fun->delete('social_post_member', array('post_id' => $_POST['post_id']));
+                $this->comman_fun->delete('social_post_member', ['post_id' => $_POST['post_id']]);
 
             }
         }
@@ -1043,9 +1003,9 @@ class Post extends App
     public function check_valid_edit_post()
     {
 
-        $post = $this->comman_fun->get_table_data('social_post_master', array('post_id' => $_POST['post_id'],'added_by' => user_session('usercode')));
+        $post = $this->comman_fun->get_table_data('social_post_master', ['post_id' => $_POST['post_id'], 'added_by' => user_session('usercode')]);
 
-        if(!isset($post[0])) {
+        if ( ! isset($post[0])) {
 
             $this->form_validation->set_message('check_valid_edit_post', 'Invaild Request');
 
@@ -1059,17 +1019,13 @@ class Post extends App
     public function get_url_info($url = null)
     {
 
-
         $this->load->model('Share_link_module');
 
         $item_path = $this->check_share_link_from_db($url);
 
+        if ($item_path == false) {
 
-
-        if($item_path == false) {
-
-
-            if(preg_match('/facebook.com/', $url)) {
+            if (preg_match('/facebook.com/', $url)) {
 
                 //if fb link
 
@@ -1085,33 +1041,31 @@ class Post extends App
 
             $item_path2 = $item_path;
 
-            $data = array(
+            $data = [
 
-                'url' 		=> $url,
+                'url'      => $url,
 
-                'url_info'  => json_encode($item_path),
+                'url_info' => json_encode($item_path),
 
-                'timedt' 	=> time()
+                'timedt'   => time(),
 
-            );
+            ];
 
             //insert in db
             $share_url_id = $this->comman_fun->addItem($data, 'social_share_url');
         }
 
-
         return $item_path;
 
     }
-
 
     public function check_share_link_from_db($url)
     {
 
         //result
-        $result = $this->comman_fun->get_table_data('social_share_url', array('url' => $url));
+        $result = $this->comman_fun->get_table_data('social_share_url', ['url' => $url]);
 
-        if(isset($result[0])) {
+        if (isset($result[0])) {
 
             return json_decode($result[0]['url_info'], true);
 
@@ -1122,7 +1076,6 @@ class Post extends App
         }
 
     }
-
 
     public function payment_test($id)
     {
