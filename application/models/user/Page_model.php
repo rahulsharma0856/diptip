@@ -5,17 +5,17 @@ class Page_model extends App_model
     public function isAdmin($page_code = null)
     {
 
-        $this -> db -> select('*');
+        $this->db->select('*');
 
-        $this -> db -> from('social_page_group');
+        $this->db->from('social_page_group');
 
-        $this -> db -> where('uid', user_session('usercode'));
+        $this->db->where('uid', user_session('usercode'));
 
-        $this -> db -> where('id', $page_code);
+        $this->db->where('id', $page_code);
 
-        $this -> db -> where('type', 'page');
+        $this->db->where('type', 'page');
 
-        $query = $this -> db -> get();
+        $query = $this->db->get();
 
         $the_content = $query->result_array();
 
@@ -23,26 +23,24 @@ class Page_model extends App_model
 
     }
 
-
-
     public function getMyPages()
     {
 
-        $this -> db -> select('pg.*');
+        $this->db->select('pg.*');
 
-        $this -> db -> select('c.cat_name');
+        $this->db->select('c.cat_name');
 
-        $this -> db -> from('social_page_group pg');
+        $this->db->from('social_page_group pg');
 
-        $this -> db -> join('sm_page_category c', 'c.id =  pg.category', 'left');
+        $this->db->join('sm_page_category c', 'c.id =  pg.category', 'left');
 
-        $this -> db -> where('pg.uid', user_session('usercode'));
+        $this->db->where('pg.uid', user_session('usercode'));
 
-        $this -> db -> where('pg.type', 'page');
+        $this->db->where('pg.type', 'page');
 
-        $this -> db -> order_by('pg.id');
+        $this->db->order_by('pg.id');
 
-        $query = $this -> db -> get();
+        $query = $this->db->get();
 
         $the_content = $query->result_array();
 
@@ -53,23 +51,23 @@ class Page_model extends App_model
     public function getPageById($id)
     {
 
-        $this -> db -> select('pg.*');
+        $this->db->select('pg.*');
 
-        $this -> db -> select('c.cat_name');
+        $this->db->select('c.cat_name');
 
-        $this -> db -> select('pgm.pg_code');
+        $this->db->select('pgm.pg_code');
 
-        $this -> db -> from('social_page_group pg');
+        $this->db->from('social_page_group pg');
 
-        $this -> db -> join('sm_page_category c', 'c.id =  pg.category', 'left');
+        $this->db->join('sm_page_category c', 'c.id =  pg.category', 'left');
 
-        $this -> db -> join('social_page_group_member pgm', 'pgm.pg_code =  pg.id AND pgm.usercode = "'.user_session('usercode').'"', 'left');
+        $this->db->join('social_page_group_member pgm', 'pgm.pg_code =  pg.id AND pgm.usercode = "' . user_session('usercode') . '"', 'left');
 
-        $this -> db -> where('pg.id', $id);
+        $this->db->where('pg.id', $id);
 
-        $this -> db -> where('pg.type', 'page');
+        $this->db->where('pg.type', 'page');
 
-        $query = $this -> db -> get();
+        $query = $this->db->get();
 
         $the_content = $query->result_array();
 
@@ -77,21 +75,20 @@ class Page_model extends App_model
 
     }
 
-
     public function isPageliked($id)
     {
 
-        $this -> db -> select('*');
+        $this->db->select('*');
 
-        $this -> db -> from('social_page_group_member');
+        $this->db->from('social_page_group_member');
 
-        $this -> db -> where('pg_code', $id);
+        $this->db->where('pg_code', $id);
 
-        $this -> db -> where('usercode', user_session('usercode'));
+        $this->db->where('usercode', user_session('usercode'));
 
-        $this -> db -> where('status', '1');
+        $this->db->where('status', '1');
 
-        $query = $this -> db -> get();
+        $query = $this->db->get();
 
         $the_content = $query->result_array();
 
@@ -99,33 +96,32 @@ class Page_model extends App_model
 
     }
 
-
     public function getMemberLikedPages($uid, $limit = null)
     {
 
-        $this -> db -> select('pgm.pg_code');
+        $this->db->select('pgm.pg_code');
 
-        $this -> db -> select('pg.*');
+        $this->db->select('pg.*');
 
-        $this -> db -> select('c.cat_name');
+        $this->db->select('c.cat_name');
 
-        $this -> db -> from('social_page_group_member pgm');
+        $this->db->from('social_page_group_member pgm');
 
-        $this -> db -> join('social_page_group pg', 'pgm.pg_code =  pg.id', 'inner');
+        $this->db->join('social_page_group pg', 'pgm.pg_code =  pg.id', 'inner');
 
-        $this -> db -> join('sm_page_category c', 'c.id =  pg.category', 'left');
+        $this->db->join('sm_page_category c', 'c.id =  pg.category', 'left');
 
-        $this -> db -> where('pgm.usercode', $uid);
+        $this->db->where('pgm.usercode', $uid);
 
-        $this -> db -> where('pgm.type', 'page');
+        $this->db->where('pgm.type', 'page');
 
-        $this -> db -> order_by('pg.id');
+        $this->db->order_by('pg.id');
 
-        if($limit != '') {
-            $this -> db -> limit($limit);
+        if ($limit != '') {
+            $this->db->limit($limit);
         }
 
-        $query = $this -> db -> get();
+        $query = $this->db->get();
 
         $the_content = $query->result_array();
 
@@ -133,44 +129,43 @@ class Page_model extends App_model
 
     }
 
-
     public function countTotalPageLikes($page_code)
     {
 
-        $this -> db -> select('COUNT(*) as tot');
+        $this->db->select('COUNT(*) as tot');
 
-        $this -> db -> from('social_page_group_member');
+        $this->db->from('social_page_group_member');
 
-        $this -> db -> where('pg_code', $page_code);
+        $this->db->where('pg_code', $page_code);
 
-        $this -> db -> where('status', '1');
+        $this->db->where('status', '1');
 
-        $query = $this -> db -> get();
+        $query = $this->db->get();
 
         $the_content = $query->result_array();
 
-        return (int)$the_content[0]['tot'];
+        return (int) $the_content[0]['tot'];
 
     }
 
     public function pageLikedMemberList($id)
     {
 
-        $this -> db -> select('pgm.*');
+        $this->db->select('pgm.*');
 
-        $this -> db -> select('CONCAT(m.fname," ",m.lname) as name, m.username, m.profile_img');
+        $this->db->select('CONCAT(m.fname," ",m.lname) as name, m.username, m.profile_img');
 
-        $this -> db -> from('social_page_group_member pgm');
+        $this->db->from('social_page_group_member pgm');
 
-        $this -> db -> join('membermaster m', 'pgm.usercode =  m.usercode', 'inner');
+        $this->db->join('membermaster m', 'pgm.usercode =  m.usercode', 'inner');
 
-        $this -> db -> where('pgm.pg_code', $id);
+        $this->db->where('pgm.pg_code', $id);
 
-        $this -> db -> where('pgm.status', '1');
+        $this->db->where('pgm.status', '1');
 
-        $this -> db -> order_by('m.fname', 'ASC');
+        $this->db->order_by('m.fname', 'ASC');
 
-        $query = $this -> db -> get();
+        $query = $this->db->get();
 
         $the_content = $query->result_array();
 
@@ -178,157 +173,145 @@ class Page_model extends App_model
 
     }
 
-
     public function getPageSuggestion($likedpage)
     {
 
-        if($likedpage == 'No') {
-            $this -> db -> select('t1.*');
+        if ($likedpage == 'No') {
+            $this->db->select('t1.*');
 
-            $this -> db -> select('t2.cat_name');
+            $this->db->select('t2.cat_name');
 
-            $this -> db -> from('social_page_group t1');
+            $this->db->from('social_page_group t1');
 
-            $this -> db -> join('sm_page_category t2', 't2.id =  t1.category', 'left');
+            $this->db->join('sm_page_category t2', 't2.id =  t1.category', 'left');
 
-            $this -> db -> join('social_page_group_member t3', 't3.pg_code =  t1.id AND t3.usercode = "'.user_session('usercode').'"', 'left');
+            $this->db->join('social_page_group_member t3', 't3.pg_code =  t1.id AND t3.usercode = "' . user_session('usercode') . '"', 'left');
 
-            $this -> db -> where('t1.type', 'page');
+            $this->db->where('t1.type', 'page');
 
-            $this -> db -> where('t3.ID IS NULL');
+            $this->db->where('t3.ID IS NULL');
 
             $this->db->order_by('rand()');
 
             $this->db->limit(3);
 
-            $query = $this -> db -> get();
+            $query = $this->db->get();
 
             $the_content = $query->result_array();
 
             return $the_content;
         } else {
-            $this -> db -> select('t1.*');
+            $this->db->select('t1.*');
 
-            $this -> db -> select('t2.cat_name');
+            $this->db->select('t2.cat_name');
 
-            $this -> db -> from('social_page_group t1');
+            $this->db->from('social_page_group t1');
 
-            $this -> db -> join('sm_page_category t2', 't2.id =  t1.category', 'left');
+            $this->db->join('sm_page_category t2', 't2.id =  t1.category', 'left');
 
-            $this -> db -> join('social_page_group_member t3', 't3.pg_code =  t1.id AND t3.usercode = "'.user_session('usercode').'"', 'left');
+            $this->db->join('social_page_group_member t3', 't3.pg_code =  t1.id AND t3.usercode = "' . user_session('usercode') . '"', 'left');
 
-            $this -> db -> where('t1.type', 'page');
+            $this->db->where('t1.type', 'page');
             //
-            $this -> db -> where('t1.category IN (select t1.category from social_page_group t1 inner join social_page_group_member t2 on t2.pg_code=t1.id where t2.usercode='.user_session('usercode').' GROUP BY t1.category)');
+            $this->db->where('t1.category IN (select t1.category from social_page_group t1 inner join social_page_group_member t2 on t2.pg_code=t1.id where t2.usercode=' . user_session('usercode') . ' GROUP BY t1.category)');
 
-            $this -> db -> where('t1.uid!='.user_session('usercode').'');
+            $this->db->where('t1.uid!=' . user_session('usercode') . '');
 
             //
-            $this -> db -> where('t3.ID IS NULL');
+            $this->db->where('t3.ID IS NULL');
 
             $this->db->order_by('rand()');
 
             $this->db->limit(3);
 
-            $query = $this -> db -> get();
+            $query = $this->db->get();
 
             $the_content = $query->result_array();
 
             return $the_content;
         }
-
-
 
     }
 
     public function do_like($page_id, $uid = null)
     {
 
-        $data = array(
+        $data = [
 
-            'pg_code' => $page_id,
+            'pg_code'  => $page_id,
 
-            'type' => 'page',
+            'type'     => 'page',
 
             'usercode' => user_session('usercode'),
 
-            'timedt' => time(),
+            'timedt'   => time(),
 
-            'status' => 1
+            'status'   => 1,
 
-        );
+        ];
 
         $this->comman_fun->addItem($data, 'social_page_group_member');
 
-        if($uid != user_session('usercode')) {
+        if ($uid != user_session('usercode')) {
 
-            $data = array(
+            $data = [
 
-            'type' => 'page_like',
+                'type'      => 'page_like',
 
-            'pgCode' => $page_id,
+                'pgCode'    => $page_id,
 
-            'usercode' => $uid,
+                'usercode'  => $uid,
 
-            'usercode2' => user_session('usercode')
+                'usercode2' => user_session('usercode'),
 
-            );
+            ];
 
             $this->Notification_module->add_notification($data);
 
         }
-
-
-
 
     }
 
     public function do_unlike($page_id)
     {
 
-        $this->comman_fun->delete('social_page_group_member', array('pg_code' => $page_id,'type' => 'page','usercode' => user_session('usercode')));
+        $this->comman_fun->delete('social_page_group_member', ['pg_code' => $page_id, 'type' => 'page', 'usercode' => user_session('usercode')]);
 
-        $this->comman_fun->delete('social_notification', array('pgCode' => $page_id,'usercode2' => user_session('usercode'),'type' => 'page_like'));
+        $this->comman_fun->delete('social_notification', ['pgCode' => $page_id, 'usercode2' => user_session('usercode'), 'type' => 'page_like']);
 
     }
-
-
 
     // ads banner
 
     public function get_ads_banners($ad_position)
     {
-        $this -> db -> select('adi.*');
+        $this->db->select('adi.*');
 
-        $this -> db -> select('adp.ad_position');
+        $this->db->select('adp.ad_position');
 
-        $this -> db -> from('social_ads_images adi');
+        $this->db->from('social_ads_images adi');
 
-        $this -> db -> join('social_ads_position adp', 'adp.id = adi.ad_position_id', 'left');
+        $this->db->join('social_ads_position adp', 'adp.id = adi.ad_position_id', 'left');
 
-        $this -> db -> where('adi.status!=', 'Delete');
+        $this->db->where('adi.status!=', 'Delete');
 
-        $this -> db -> where('adp.ad_position=', $ad_position);
+        $this->db->where('adp.ad_position=', $ad_position);
 
-        $this -> db -> limit(1);
+        $this->db->limit(1);
 
-        $query = $this -> db -> get();
+        $query = $this->db->get();
 
         $the_content = $query->result_array();
 
-        if(isset($the_content[0])) {
-            $base_path 		= str_replace('sm/', '', base_url());
+        if (isset($the_content[0])) {
+            $base_path = str_replace('sm/', '', base_url());
 
-            $ads_path  		= $base_path.'upload/social_media/ads_img/';
+            $ads_path = $base_path . 'upload/social_media/ads_img/';
 
-            $the_content[0]['ad_img_path'] 	= $ads_path.$the_content[0]['img_path'];
+            $the_content[0]['ad_img_path'] = $ads_path . $the_content[0]['img_path'];
         }
-
 
         return $the_content[0];
     }
-
-
-
 
 }

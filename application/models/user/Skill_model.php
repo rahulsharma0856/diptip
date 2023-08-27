@@ -1,13 +1,12 @@
 <?php
 
-
 class Skill_model extends App_model
 {
     public function getSkill()
     {
 
         $string =
-        ' .NET
+            ' .NET
 | 4D
 | Active Directory
 | ADO.NET
@@ -497,7 +496,7 @@ class Skill_model extends App_model
 | Zend
 | Zendesk
 | Zoho
-|Post a Project 
+|Post a Project
 | Amazon Fire
 | Amazon Kindle
 | Android
@@ -706,7 +705,7 @@ class Skill_model extends App_model
 | Wireframes
 | Word
 | Yahoo! Store Design
-| Zbrush 
+| Zbrush
 | Article Submission
 | Bookkeeping
 | BPO
@@ -1168,7 +1167,7 @@ class Skill_model extends App_model
 | Training
 | Troubleshooting
 | Valuation & Appraisal
-| Weddings' ;
+| Weddings';
 
         return $string;
     }

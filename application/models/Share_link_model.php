@@ -1,6 +1,6 @@
 <?php
 
-if (! defined('BASEPATH')) {
+if ( ! defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 class Share_link_model extends App_model
@@ -16,25 +16,23 @@ class Share_link_model extends App_model
 
         $url_desc = json_decode($ret, true);
 
+        $item_parts = [];
 
+        $item_parts['description'] = $url_desc['description'];
 
-        $item_parts                 = 		array();
+        $item_parts['image'] = $url_desc['image'];
 
-        $item_parts['description']  = 		$url_desc['description'];
-
-        $item_parts['image']  		= 		$url_desc['image'];
-
-        if($item_parts['image'] == "") {
+        if ($item_parts['image'] == "") {
 
             $item_parts['image'] = base_url('upload/default/default_b.png');
 
         }
 
-        $item_parts['title'] 		= 		$url_desc['title'];
+        $item_parts['title'] = $url_desc['title'];
 
-        $item_parts['host']			=	 	$this->url_to_domain($url);
+        $item_parts['host'] = $this->url_to_domain($url);
 
-        if(!isset($item_parts['title'])) {
+        if ( ! isset($item_parts['title'])) {
 
             $item_parts['title'] = $url;
 
@@ -45,11 +43,11 @@ class Share_link_model extends App_model
     public function get_info($url = null)
     {
 
-        require_once APPPATH .'third_party/simple_html_dom.php';
+        require_once APPPATH . 'third_party/simple_html_dom.php';
 
         $agent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.0.3705; .NET CLR 1.1.4322)';
 
-        $ch    = curl_init();
+        $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
@@ -61,7 +59,7 @@ class Share_link_model extends App_model
 
         $output = curl_exec($ch);
 
-        $debug  = curl_getinfo($ch);
+        $debug = curl_getinfo($ch);
 
         curl_close($ch);
 
@@ -71,7 +69,7 @@ class Share_link_model extends App_model
 
             $url = str_replace("http://", "https://", $url);
 
-            $ch  = curl_init();
+            $ch = curl_init();
 
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
@@ -83,32 +81,31 @@ class Share_link_model extends App_model
 
             $output = curl_exec($ch);
 
-            $debug  = curl_getinfo($ch);
+            $debug = curl_getinfo($ch);
 
             curl_close($ch);
 
         }
 
+        $html = str_get_html($output);
 
-        $html           			= 		str_get_html($output);
+        $item_parts = [];
 
-        $item_parts                 = 		array();
+        $item_parts['description'] = $this->find_description($html);
 
-        $item_parts['description']  = 		$this->find_description($html);
+        $item_parts['image'] = $this->find_image($html, $output);
 
-        $item_parts['image']  		= 		$this->find_image($html, $output);
-
-        if($item_parts['image'] == "") {
+        if ($item_parts['image'] == "") {
 
             $item_parts['image'] = base_url('upload/default/default_b.png');
 
         }
 
-        $item_parts['title'] 		= 		$this->get_title($html);
+        $item_parts['title'] = $this->get_title($html);
 
-        $item_parts['host']			=	 	$this->url_to_domain($url);
+        $item_parts['host'] = $this->url_to_domain($url);
 
-        if(!isset($item_parts['title'])) {
+        if ( ! isset($item_parts['title'])) {
 
             $item_parts['title'] = $url;
 
@@ -121,13 +118,13 @@ class Share_link_model extends App_model
     public function find_description($html = null)
     {
 
-        $arr = array('meta[name=description]','meta[property=og:description]','meta[name=twitter:description]');
+        $arr = ['meta[name=description]', 'meta[property=og:description]', 'meta[name=twitter:description]'];
 
-        for($i = 0;$i < count($arr);$i++) {
+        for ($i = 0; $i < count($arr); $i++) {
 
             $obj = $html->find($arr[$i], false);
 
-            if($obj != null) {
+            if ($obj != null) {
 
                 return $obj->attr['content'];
 
@@ -142,29 +139,27 @@ class Share_link_model extends App_model
     public function find_image($html = null, $output = null)
     {
 
-        $arr = array('meta[property=og:image]','meta[property=og:image:src]','meta[name=twitter:image]','meta[twitter:image:src]');
-
+        $arr = ['meta[property=og:image]', 'meta[property=og:image:src]', 'meta[name=twitter:image]', 'meta[twitter:image:src]'];
 
         $img_url = "";
 
-        for($i = 0;$i < count($arr);$i++) {
+        for ($i = 0; $i < count($arr); $i++) {
 
             $obj = $html->find($arr[$i], false);
 
-            if($obj != null) {
+            if ($obj != null) {
 
-                $img_url =  $obj->attr['content'];
+                $img_url = $obj->attr['content'];
 
             }
 
         }
 
-
-        if($img_url == "") {
+        if ($img_url == "") {
 
             ////
 
-            $img_pattern = '/<img[^>]*'.'src=[\"|\'](.*)[\"|\']/Ui';
+            $img_pattern = '/<img[^>]*' . 'src=[\"|\'](.*)[\"|\']/Ui';
 
             $images = '';
 
@@ -172,18 +167,18 @@ class Share_link_model extends App_model
 
             $total_images = count($images[1]);
 
-            if($total_images > 0) {
+            if ($total_images > 0) {
 
                 $images = $images[1];
             }
 
-            for($i = 0; $i < $total_images; $i++) {
+            for ($i = 0; $i < $total_images; $i++) {
 
-                if(getimagesize($images[$i])) {
+                if (getimagesize($images[$i])) {
 
                     list($width, $height, $type, $attr) = getimagesize($images[$i]);
 
-                    if($width > 350) {
+                    if ($width > 350) {
 
                         $img_url = $images[$i];
 
@@ -203,7 +198,6 @@ class Share_link_model extends App_model
 
     }
 
-
     public function get_title($html = null)
     {
 
@@ -213,23 +207,22 @@ class Share_link_model extends App_model
 
             foreach ($element1->find('title') as $element) {
 
-                $title    = trim(strip_tags($element));
+                $title = trim(strip_tags($element));
 
             }
         }
 
+        if ($title == "") {
 
-        if($title == "") {
+            $arr = ['meta[property=og:description]', 'meta[property=twitter:description]'];
 
-            $arr = array('meta[property=og:description]','meta[property=twitter:description]');
-
-            for($i = 0;$i < count($arr);$i++) {
+            for ($i = 0; $i < count($arr); $i++) {
 
                 $obj = $html->find($arr[$i], false);
 
-                if($obj != null) {
+                if ($obj != null) {
 
-                    $title =  $obj->attr['content'];
+                    $title = $obj->attr['content'];
 
                 }
 
@@ -237,31 +230,24 @@ class Share_link_model extends App_model
 
         }
 
-
-
         return $title;
 
     }
-
 
     public function url_to_domain($url = null)
     {
 
         $host = @parse_url($url, PHP_URL_HOST);
 
-
-        if (!$host) {
+        if ( ! $host) {
 
             $host = $url;
         }
-
-
 
         if (substr($host, 0, 4) == "www.") {
 
             $host = substr($host, 4);
         }
-
 
         if (strlen($host) > 50) {
 
@@ -271,6 +257,5 @@ class Share_link_model extends App_model
         return $host;
 
     }
-
 
 }
