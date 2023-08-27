@@ -32,7 +32,7 @@ class Search extends App
 
         if(isset($_GET['q'])) {
 
-            $filter = filter_text(utf8_decode(urldecode($_GET['q'])));
+            $filter = filter_text(urldecode($_GET['q']));
 
             $data['filter_text'] = $filter;
 
@@ -47,11 +47,8 @@ class Search extends App
         }
 
         $this->load->view('user/home/comman/topheader');
-
         $this->load->view('user/home/comman/header');
-
         $this->load->view('user/search/all', $data);
-
         $this->load->view('user/home/comman/footer');
 
     }
@@ -60,7 +57,7 @@ class Search extends App
     public function people()
     {
 
-        $filter = filter_text(utf8_decode(urldecode($_GET['q'])));
+        $filter = filter_text(urldecode($_GET['q']));
 
         $data['filter_text'] = $filter;
 

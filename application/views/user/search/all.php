@@ -72,7 +72,7 @@
       </div>
     </div>
     
-      <?=$this->load->view('user/search/left_bar',$data);?>
+      <?php $this->load->view('user/search/left_bar',$data); ?>
   </div>
 </div>
 

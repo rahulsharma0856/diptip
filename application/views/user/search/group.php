@@ -52,9 +52,8 @@
       
     </div>
     
-    <?=$this->load->view('user/search/left_bar',$data);?>
-    
-    <?=$this->load->view('user/search/group_right_bar',$data);?>
+    <?php $this->load->view('user/search/left_bar',$data);?>
+    <?php $this->load->view('user/search/group_right_bar',$data);?>
     
   </div>
 </div>
