@@ -4,35 +4,25 @@ if (! defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
-class Group extends CI_Controller
+class Group extends App
 {
     public function __construct()
     {
         parent::__construct();
 
-
-
         $this->load->model('user/Group_model', '', true);
-
         $this->load->model('user/Post_model', '', true);
-
         $this->load->model('user/Comment_model');
-
         $this->load->model('user/Notification_module');
-
         $this->load->model('Member_module', '', true);
-
         $this->load->library('image_lib');
-
         $this->load->library('upload');
 
     }
 
     public function index()
     {
-
         $this->load->view('user/not_found');
-
     }
 
 
@@ -41,19 +31,13 @@ class Group extends CI_Controller
     {
 
         $this -> Member_module -> check_paid(user_session('usercode'));
-
         $data['mode'] 			= 	'add' ;
-
         $data['MyGroup'] 		= 	$this->Group_model->getMyGroup();
-
         $data['category'] 		= 	$this->comman_fun->get_table_data('sm_page_category', array('status' => 'Active'));
 
         $this->load->view('user/home/comman/topheader');
-
         $this->load->view('user/home/comman/header');
-
         $this->load->view('user/group/group_add', $data);
-
         $this->load->view('user/home/comman/footer');
 
     }
@@ -63,26 +47,18 @@ class Group extends CI_Controller
     {
 
         if ($this->input->server('REQUEST_METHOD') === 'POST') {
-
             $this -> Member_module -> check_paid(user_session('usercode'));
-
             $this->form_validation->set_rules('name', 'Name', 'required|trim');
-
             $this->form_validation->set_rules('description', 'Description', 'required|trim');
 
             //$this->form_validation->set_rules('profile_img','Profile Image', 'callback_is_profile_img_selected');
 
             //$this->form_validation->set_rules('cover_img','Cover Image', 'callback_is_cover_img_selected');
 
-
             if ($this->form_validation->run() === false) {
-
                 $this->add();
-
             } else {
-
                 $i = $this->_insert();
-
                 redirect('/group/view/'.$i, 'refresh');
 
             }
@@ -97,17 +73,11 @@ class Group extends CI_Controller
 
     public function is_cover_img_selected()
     {
-
         $this->form_validation->set_message('is_cover_img_selected', 'Please select profile image.');
-
         if (empty($_FILES['cover_img']['name']) && $_POST['mode'] == 'add') {
-
             return false;
-
         } else {
-
             return true;
-
         }
 
     }
@@ -115,17 +85,11 @@ class Group extends CI_Controller
 
     public function is_profile_img_selected()
     {
-
         $this->form_validation->set_message('is_profile_img_selected', 'Please select profile image.');
-
         if (empty($_FILES['profile_img']['name']) && $_POST['mode'] == 'add') {
-
             return false;
-
         } else {
-
             return true;
-
         }
 
     }

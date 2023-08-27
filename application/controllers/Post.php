@@ -915,17 +915,12 @@ class Post extends App
     {
 
         if ($this->input->server('REQUEST_METHOD') === 'POST') {
-
             $this->form_validation->set_rules('type', 'Post Type', 'callback_check_valid_edit_post');
-
             if($_FILES['uploadStatusVideo']['name'] != '') {
-
                 $this->form_validation->set_rules('uploadStatusVideo', 'Video', 'callback_upload_video');
-
             }
 
             $data = array();
-
             if ($this->form_validation->run() === false) {
 
                 $data['text']   =  validation_errors();

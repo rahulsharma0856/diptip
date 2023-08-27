@@ -18,7 +18,7 @@ class Smileys extends CI_Controller
         //
         //    $data['smiley_table'] = $this->table->generate($col_array);
 
-
+        $data = [];
         $this->load->view('web/smiley_view', $data);
     }
 
