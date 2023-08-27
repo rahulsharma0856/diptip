@@ -9,7 +9,6 @@ class Dashboard extends App
     /**
         @property load $this->load
     */
-    
     public function __construct()
     {
         parent::__construct();
@@ -35,22 +34,22 @@ class Dashboard extends App
         $limit = 3; //dashboard sidebar item limit
 
         $data['MemberLikedPages'] 	= 	$this->Page_model->getMemberLikedPages(user_session('usercode'), $limit);
-
+      
         if(isset($data['MemberLikedPages'][0])) {
-            $likedpage = 'Yes';
+            $likedPage = 'Yes';
         } else {
-            $likedpage = 'No';
+            $likedPage = 'No';
         }
+  
 
-
-        $data['PageSuggestion'] 	= 	$this->Page_model->getPageSuggestion($likedpage);
+        $data['PageSuggestion'] 	= 	$this->Page_model->getPageSuggestion($likedPage);
         $data['SuggestedFriends'] 	= 	$this->Member_module->Suggested_friends(user_session('usercode'));
         $data['RecentFriends'] 	= 	$this->Member_module->get_last_recent_friends_pic(user_session('usercode'));
 
         $data['paid_sts']			=	$this->Member_module->is_paid(user_session('usercode'));
         $data['myGroups'] 			= 	$this->Group_model->getMemberJoinedGroups(user_session('usercode'), $limit);
 
-        $this->template->data = data;
+        $this->template->data = $data;
         $this->template->title = 'Login';
         $this->template->view = 'user/home/dashboard_view';
         $this->load->view('user/layout');

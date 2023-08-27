@@ -196,7 +196,7 @@ class Chat_model extends App_model
 
         $time = time() - 8;
 
-        if($friend == 0) {
+        if($friend == "" || !$friend) {
 
             return array();
 
