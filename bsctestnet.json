@@ -1,0 +1,33 @@
+{
+  "name": "APEFISWAP",
+  "logoURI": "https://github.com/wanswap/token-list/raw/main/wanswap_token_list.png",
+  "keywords": ["defi", "apefiswap", "yield"],
+  "timestamp": "2024-12-25T01:40:34.305Z",
+  "tokens": [
+
+    {
+      "chainId": 97,
+      "address": "0x10B635DDEedFC92fA08B86896a5BbF4a4de88695",
+      "name": "ApeOne",
+      "symbol": "APEONE",
+      "decimals": 18,
+      "logoURI": ""
+    },
+    
+    {
+      "chainId": 97,
+      "address": "0x07C1C811cE613637cc5ee68C9C402A8357131c4d ",
+      "name": "ApeTwo",
+      "symbol": "APETWO",
+      "decimals": 18,
+      "logoURI": ""
+    },
+    
+  
+  ],
+  "version": {
+    "major": 0,
+    "minor": 3,
+    "patch": 0
+  }
+}
